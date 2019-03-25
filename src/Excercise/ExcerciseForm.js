@@ -18,7 +18,14 @@ class ExcerciseForm extends Component {
       <Form>
       <h1>Create New Excercise</h1>
 
-        <FormulaEditor operators={operators} title="Starting Formula"/>
+      <FormGroup>
+      <Label for="exampleText">Problem Statement</Label>
+      <Input type="textarea" name="text" id="exampleText" rows='4' />
+      </FormGroup>
+
+      <FormulaEditor operators={operators} title="Starting Formula"/>
+
+      <FormulaEditor operators={operators} title="Target Formula"/>
 
         <FormGroup tag="fieldset">
             <legend>Show Target Formula:</legend>
@@ -36,13 +43,10 @@ class ExcerciseForm extends Component {
             </FormGroup>
           </FormGroup>
 
-          <FormGroup>
-             <Label for="exampleText">Problem Statement</Label>
-             <Input type="textarea" name="text" id="exampleText" rows='4' />
-         </FormGroup>
 
-        <FormulaEditor operators={operators} title="Target Formula"/>
-
+        <h4>
+        Select Transformations
+        </h4>
         <Duallist
           available={transformations}
           selected={selectedTransformations}
@@ -50,7 +54,6 @@ class ExcerciseForm extends Component {
           sortable={false}
           searchable={false}
         />
-
          <Button color="primary" id="submit" size="lg" block>Submit</Button>
 
       </Form>
