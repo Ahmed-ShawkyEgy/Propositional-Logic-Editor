@@ -22,7 +22,7 @@ class FormulaEditor extends Component {
           name={this.props.name}
           value={this.props.value}
           onChange={this.props.onChange}
-          autocomplete="off"
+          autoComplete="off"
           />
 
         <ButtonGroup  className="button-list">

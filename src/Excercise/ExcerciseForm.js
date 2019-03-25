@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import FormulaEditor from './FormulaEditor';
-import Duallist from 'react-duallist';
+import DualListBox from 'react-dual-listbox';
 import {Button, Form, FormGroup, Label, Input} from 'reactstrap';
-
 import 'react-duallist/lib/react_duallist.css'
+import 'react-dual-listbox/lib/react-dual-listbox.css';
+import 'font-awesome/css/font-awesome.min.css';
+
 
 class ExcerciseForm extends Component {
   constructor(props){
@@ -13,7 +15,6 @@ class ExcerciseForm extends Component {
       startingFormula:"",
       targetFormula:"",
       showToUser:true,
-      availableTransformations: this.props.transformations.slice(),
       selectedTransformations:[]
     };
     this.handleChange = this.handleChange.bind(this);
@@ -38,8 +39,7 @@ class ExcerciseForm extends Component {
 
   render() {
     const operators = this.props.operators;
-    var transformations = this.props.transformations.slice();
-    var selectedTransformations = [];
+    const availableTransformations = this.props.transformations.slice();
     return (
       <Form>
       <h1>Create New Excercise</h1>
@@ -104,13 +104,15 @@ class ExcerciseForm extends Component {
         <h4>
         Select Transformations
         </h4>
-        <Duallist
-          available={transformations}
-          selected={selectedTransformations}
-          onMove={this.onMove}
-          sortable={false}
-          searchable={false}
+
+        <DualListBox
+          options={availableTransformations}
+          selected={this.state.selectedTransformations}
+          onChange={(selected) => {
+                    this.setState({selectedTransformations:selected});
+                }}
         />
+
          <Button color="primary" id="submit" size="lg" block>Submit</Button>
 
       </Form>
