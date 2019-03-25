@@ -3,7 +3,13 @@ import {Button, FormGroup, Label, Input,ButtonGroup } from 'reactstrap';
 
 class FormulaEditor extends Component {
   render() {
-    const buttons = this.props.operators.map((button)=><Button key={button}>{button}</Button>);
+    const buttons = this.props.operators.map((button)=>(
+      <Button
+        key={button}
+        onClick={this.props.onClick}
+        value={button}
+        name={this.props.name}
+        >{button}</Button>));
 
     return (
       <FormGroup>

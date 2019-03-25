@@ -17,16 +17,23 @@ class ExcerciseForm extends Component {
       selectedTransformations:[]
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleButtonClick = this.handleButtonClick.bind(this);
   }
 
   handleChange(event){
-    console.log(event.target.value);
     const target = event.target;
     const value = target.type === 'radio' ? (target.value==='n'?false:true) : target.value;
     const name = target.name;
    this.setState({
      [name]: value
    });
+  }
+
+  handleButtonClick(event){
+    const newValue = this.state[event.target.name] + event.target.value;
+    this.setState({
+      [event.target.name]:newValue
+    });
   }
 
   render() {
@@ -55,6 +62,7 @@ class ExcerciseForm extends Component {
         name="startingFormula"
         value={this.state.startingFormula}
         onChange={this.handleChange}
+        onClick={this.handleButtonClick}
         />
 
       <FormulaEditor
@@ -63,6 +71,7 @@ class ExcerciseForm extends Component {
         name="targetFormula"
         value={this.state.targetFormula}
         onChange={this.handleChange}
+        onClick={this.handleButtonClick}
         />
 
         <FormGroup tag="fieldset">
