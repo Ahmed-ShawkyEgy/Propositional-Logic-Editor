@@ -8,6 +8,25 @@ import 'react-duallist/lib/react_duallist.css'
 class ExcerciseForm extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      problemStatement:"",
+      startingFormula:"",
+      targetFormula:"",
+      showToUser:true,
+      availableTransformations: this.props.transformations.slice(),
+      selectedTransformations:[]
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event){
+    console.log(event.target.value);
+    const target = event.target;
+    const value = target.type === 'radio' ? (target.value==='n'?false:true) : target.value;
+    const name = target.name;
+   this.setState({
+     [name]: value
+   });
   }
 
   render() {
@@ -19,25 +38,54 @@ class ExcerciseForm extends Component {
       <h1>Create New Excercise</h1>
 
       <FormGroup>
-      <Label for="exampleText">Problem Statement</Label>
-      <Input type="textarea" name="text" id="exampleText" rows='4' />
+        <Label for="problemStatement">Problem Statement</Label>
+        <Input
+          type="textarea"
+          name="problemStatement"
+          id="problemStatement"
+          value={this.state.problemStatement}
+          onChange={this.handleChange}
+          rows='4'
+        />
       </FormGroup>
 
-      <FormulaEditor operators={operators} title="Starting Formula"/>
+      <FormulaEditor
+        operators={operators}
+        title="Starting Formula"
+        name="startingFormula"
+        value={this.state.startingFormula}
+        onChange={this.handleChange}
+        />
 
-      <FormulaEditor operators={operators} title="Target Formula"/>
+      <FormulaEditor
+        operators={operators}
+        title="Target Formula"
+        name="targetFormula"
+        value={this.state.targetFormula}
+        onChange={this.handleChange}
+        />
 
         <FormGroup tag="fieldset">
             <legend>Show Target Formula:</legend>
             <FormGroup check>
               <Label check>
-                <Input type="radio" name="showFormula" checked='checked'/>
+                <Input
+                type="radio"
+                name="showToUser"
+                value="y"
+                onChange={this.handleChange}
+                checked={this.state.showToUser}/>
                 Yes
               </Label>
             </FormGroup>
             <FormGroup check>
               <Label check>
-                <Input type="radio" name="showFormula"/>
+                <Input
+                type="radio"
+                name="showToUser"
+                value="n"
+                onChange={this.handleChange}
+                checked={!this.state.showToUser}/>
                 No
               </Label>
             </FormGroup>

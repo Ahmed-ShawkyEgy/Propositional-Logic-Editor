@@ -11,7 +11,7 @@ class FormulaEditor extends Component {
           {this.props.title}
         </Label>
 
-        <Input type='text'/>
+        <Input type='text' name={this.props.name} value={this.props.value} onChange={this.props.onChange}/>
 
         <ButtonGroup  className="button-list">
           {buttons}
