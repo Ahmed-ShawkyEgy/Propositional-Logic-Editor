@@ -1,27 +1,22 @@
 import React, { Component } from 'react';
+import {Button, FormGroup, Label, Input,ButtonGroup } from 'reactstrap';
 
 class FormulaEditor extends Component {
   render() {
-    const buttons = this.props.operators.map((button)=><button>{button}</button>);
+    const buttons = this.props.operators.map((button)=><Button key={button}>{button}</Button>);
 
     return (
-      <div>
-        <label>
-          {this.props.title}:
-          <FormulaText/>
-        </label>
-        <div class="button-list">
+      <FormGroup>
+        <Label>
+          {this.props.title}
+        </Label>
+
+        <Input type='text'/>
+
+        <ButtonGroup  className="button-list">
           {buttons}
-        </div>
-      </div>
-    );
-  }
-}
-
-class FormulaText extends Component{
-  render(){
-    return (
-      <input type='text'/>
+        </ButtonGroup >
+    </FormGroup>
     );
   }
 }

@@ -7,17 +7,19 @@ class App extends Component {
   }
 
   render() {
-    const operators = ['v','^','->','<->'];
+    const operators = ['∨','∧','→','↔','⊤','⊥','¬'];
     const transformations = [
       {label:"a->b = -avb", value:"0"},
       {label:"avb = bva", value:"1"},
       {label:"-(avb) = -a^-b", value:"2"}
     ];
     return (
+      <div className="container">
       <ExcerciseForm
         operators={operators}
         transformations={transformations}
         />
+      </div>
     );
   }
 }

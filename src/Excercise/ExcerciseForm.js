@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FormulaEditor from './FormulaEditor';
 import Duallist from 'react-duallist';
+import {Button, Form, FormGroup, Label, Input} from 'reactstrap';
 
 import 'react-duallist/lib/react_duallist.css'
 
@@ -14,23 +15,33 @@ class ExcerciseForm extends Component {
     var transformations = this.props.transformations.slice();
     var selectedTransformations = [];
     return (
-      <form>
+      <Form>
+      <h1>Create New Excercise</h1>
+
         <FormulaEditor operators={operators} title="Starting Formula"/>
 
-        <div>
-          <label>
-            Show Target Formula:
-            <input type="radio" name="show" value="yes" checked="checked"/> Yes
-            <input type="radio" name="show" value="no"/> No
-          </label>
-        </div>
+        <FormGroup tag="fieldset">
+            <legend>Show Target Formula:</legend>
+            <FormGroup check>
+              <Label check>
+                <Input type="radio" name="showFormula" checked='checked'/>
+                Yes
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input type="radio" name="showFormula"/>
+                No
+              </Label>
+            </FormGroup>
+          </FormGroup>
 
-        <div>
-          <textarea  rows="5" cols="50">Problem Statement</textarea>
-        </div>
+          <FormGroup>
+             <Label for="exampleText">Problem Statement</Label>
+             <Input type="textarea" name="text" id="exampleText" rows='4' />
+         </FormGroup>
 
         <FormulaEditor operators={operators} title="Target Formula"/>
-
 
         <Duallist
           available={transformations}
@@ -40,9 +51,9 @@ class ExcerciseForm extends Component {
           searchable={false}
         />
 
-        <input type="submit" value="Submit" />
+         <Button color="primary" id="submit" size="lg" block>Submit</Button>
 
-      </form>
+      </Form>
     );
   }
 }
