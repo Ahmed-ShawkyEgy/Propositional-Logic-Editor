@@ -3,6 +3,7 @@ import ExcerciseForm from './Excercise/ExcerciseForm.js';
 
 class App extends Component {
 
+
   render() {
     const operators = ['∨','∧','→','↔','⊤','⊥','¬'];
     const transformations = [

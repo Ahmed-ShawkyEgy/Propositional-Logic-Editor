@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import FormulaEditor from './FormulaEditor';
 import DualListBox from 'react-dual-listbox';
 import {Button, Form, FormGroup, Label, Input} from 'reactstrap';
+import peg from "pegjs";
+
 import 'react-duallist/lib/react_duallist.css'
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 
 class ExcerciseForm extends Component {
+
   constructor(props){
     super(props);
     this.state = {
@@ -17,8 +20,19 @@ class ExcerciseForm extends Component {
       showToUser:true,
       selectedTransformations:[]
     };
+    this.parser = null;
     this.handleChange = this.handleChange.bind(this);
     this.handleButtonClick = this.handleButtonClick.bind(this);
+
+  }
+
+  componentDidMount() {
+    console.log("Mounted Successfully");
+    fetch('/Grammer/LogicParsingGrammer.txt').then((r) => r.text())
+    .then(text  => {
+      this.parser = peg.generate(text);
+      console.log(this.parser.parse("a∨b∨c→b"));
+    })
   }
 
   handleChange(event){
