@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import Collapsible from 'react-collapsible';
-import { Container, Row, Col,Card,Collapse,CardBody } from 'reactstrap';
-import peg from "pegjs";
+import { Card,Collapse,CardBody } from 'reactstrap';
 
 class Formula extends Component{
 
@@ -17,10 +15,9 @@ class Formula extends Component{
 
   render()
   {
-    var excercise = this.props.excercise;
     return (
       <div className="step">
-        <a onClick={() => {this.toggle();}} href="#">10. Initial formula</a>
+        <a onClick={() => {this.toggle();}} href="#">{this.props.header}</a>
         <Collapse isOpen={this.state.collapse}>
         <Card className="step-body">
           <CardBody>

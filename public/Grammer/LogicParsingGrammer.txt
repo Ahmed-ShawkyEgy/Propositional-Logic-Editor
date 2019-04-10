@@ -60,8 +60,8 @@ Factor
 / negations:(_ '¬' _)* operand:Operand {return buildUnaryTree('¬',negations.length,operand);}
 
 Operand
-  = _ atom:([a-z] [a-zA-Z0-9]*) { return atom[0] + atom[1].join(""); }
-  / _ atom:('⊤'/'⊥') {return atom;}
+  = _ atom:([a-z] [a-zA-Z0-9]*) { return new Node(atom[0] + atom[1].join("")); }
+  / _ atom:('⊤'/'⊥') {return new Node(atom);}
 
 _ "whitespace"
   = [ \t\n\r]*
