@@ -4,21 +4,15 @@ import Collapsible from 'react-collapsible';
 import { Container, Row, Col,Card,Collapse,CardBody } from 'reactstrap';
 import './Editor.css';
 import 'font-awesome/css/font-awesome.min.css';
+import Formula from './Formula';
 
 class Editor extends Component{
 
   constructor(props){
     super(props);
     this.state = {collapse:[true,false]};
-    this.toggle = this.toggle.bind(this);
   }
 
-  toggle(index) {
-    var modifiedCollapse = this.state.collapse.slice();
-    console.log(index);
-    modifiedCollapse[index] = !modifiedCollapse[index];
-    this.setState({ collapse: modifiedCollapse });
-  }
 
   render()
   {
@@ -74,71 +68,9 @@ class Editor extends Component{
                    <Row>
                      <Col lg="12">
 
-                       <div className="step">
-                         <a onClick={() => {this.toggle(0);}} href="#">1. Initial formula</a>
-                         <Collapse isOpen={this.state.collapse[0]}>
-                         <Card className="step-body">
-                           <CardBody>
-                             ( D → B ) ∧ ( B → ( D ∧ U ) ) ∧ ¬( B ∧ D ∧ U ) ∧ D
-                           </CardBody>
-                         </Card>
-                       </Collapse>
-                       </div>
+                     <Formula body="( D → B ) ∧ ( B → ( D ∧ U ) ) ∧ ¬( B ∧ D ∧ U ) ∧ D"/>
 
-                       <div className="step">
-                         <a onClick={() => {this.toggle(0);}} href="#">1. Initial formula</a>
-                         <Collapse isOpen={this.state.collapse[0]}>
-                         <Card className="step-body">
-                           <CardBody>
-                             ( D → B ) ∧ ( B → ( D ∧ U ) ) ∧ ¬( B ∧ D ∧ U ) ∧ D
-                           </CardBody>
-                         </Card>
-                       </Collapse>
-                       </div>
 
-                       <div className="step">
-                         <a onClick={() => {this.toggle(0);}} href="#">1. Initial formula</a>
-                         <Collapse isOpen={this.state.collapse[0]}>
-                         <Card className="step-body">
-                           <CardBody>
-                             ( D → B ) ∧ ( B → ( D ∧ U ) ) ∧ ¬( B ∧ D ∧ U ) ∧ D
-                           </CardBody>
-                         </Card>
-                       </Collapse>
-                       </div>
-
-                       <div className="step">
-                         <a onClick={() => {this.toggle(0);}} href="#">1. Initial formula</a>
-                         <Collapse isOpen={this.state.collapse[0]}>
-                         <Card className="step-body">
-                           <CardBody>
-                             ( D → B ) ∧ ( B → ( D ∧ U ) ) ∧ ¬( B ∧ D ∧ U ) ∧ D
-                           </CardBody>
-                         </Card>
-                       </Collapse>
-                       </div>
-
-                       <div className="step">
-                         <a onClick={() => {this.toggle(0);}} href="#">1. Initial formula</a>
-                         <Collapse isOpen={this.state.collapse[0]}>
-                         <Card className="step-body">
-                           <CardBody>
-                             ( D → B ) ∧ ( B → ( D ∧ U ) ) ∧ ¬( B ∧ D ∧ U ) ∧ D
-                           </CardBody>
-                         </Card>
-                       </Collapse>
-                       </div>
-
-                       <div className="step">
-                         <a onClick={() => {this.toggle(0);}} href="#">1. Initial formula</a>
-                         <Collapse isOpen={this.state.collapse[0]}>
-                         <Card className="step-body">
-                           <CardBody>
-                             ( D → B ) ∧ ( B → ( D ∧ U ) ) ∧ ¬( B ∧ D ∧ U ) ∧ D
-                           </CardBody>
-                         </Card>
-                       </Collapse>
-                       </div>
                    </Col>
                  </Row>
 
