@@ -23,15 +23,13 @@ class ExcerciseForm extends Component {
     this.parser = null;
     this.handleChange = this.handleChange.bind(this);
     this.handleButtonClick = this.handleButtonClick.bind(this);
-
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
-    console.log("Mounted Successfully");
     fetch('/Grammer/LogicParsingGrammer.txt').then((r) => r.text())
     .then(text  => {
       this.parser = peg.generate(text);
-      console.log(this.parser.parse("a∨b∨c→b"));
     })
   }
 
@@ -51,11 +49,36 @@ class ExcerciseForm extends Component {
     });
   }
 
+  onSubmit(e){
+    e.preventDefault();
+    if(this.parser)
+    {
+      try{
+        this.parser.parse(this.state.startingFormula);
+      }
+      catch(err){
+        console.log("Failed to parse Starting Formula");
+        console.log(err.message);
+        return;
+      }
+      try {
+        this.parser.parse(this.state.targetFormula);
+      } catch (err) {
+        console.log("Failed to parse Target Formula");
+        console.log(err.message);
+        return;
+      }
+      console.log("Successfull login");
+      return;
+    }
+    console.log("Parser not ready");
+  }
+
   render() {
     const operators = this.props.operators;
     const availableTransformations = this.props.transformations.slice();
     return (
-      <Form>
+      <Form onSubmit={this.onSubmit}>
       <h1>Create New Excercise</h1>
 
       <FormGroup>
@@ -127,7 +150,7 @@ class ExcerciseForm extends Component {
                 }}
         />
 
-         <Button color="primary" id="submit" size="lg" block>Submit</Button>
+      <Button type="submit" color="primary" id="submit" size="lg" block>Submit</Button>
 
       </Form>
     );

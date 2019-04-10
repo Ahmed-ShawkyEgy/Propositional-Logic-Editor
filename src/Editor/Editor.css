@@ -1,0 +1,139 @@
+body{
+/*   overflow-x:hidden; */
+}
+
+.container {
+  margin-top: 20px;
+/*   padding-top:10px; */
+/*   padding-right:100px !important; */
+/*   padding-left:100px !important; */
+/*     border: 2px solid blue; */
+margin-bottom: 20px;
+}
+.main-body {
+  background-color: #f0f0f5;
+  box-shadow: 0px 5px 100px #888888;
+  padding: 30px;
+/*   padding-left:10px; */
+/*   padding-right:10px; */
+}
+
+.hint-bar{
+  padding:10px;
+/*   background-image: linear-gradient(#4dffff, #ccffff); */
+  background-color:#FFDB79;
+  border-radius:10px;
+  box-shadow: 1px 1px 20px #888888;
+}
+
+.feedback-bar{
+  padding:10px;
+/*   background-image: linear-gradient(#FF9579, #ffe6e6); */
+  background-color:#FF9579;
+  border-radius:10px;
+  box-shadow: 1px 1px 20px #888888;
+}
+
+.editor {
+  background-color:#d2d2e0;
+  box-shadow: 0px 5px 10px #888888;
+/*   margin-right:123px; */
+/*   margin-bottom: 20px; */
+/*   padding:10px; */
+  padding-top:10px;
+  padding-bottom: 10px;
+/*   margin-left:10px; */
+  margin-right:100px;
+  padding-bottom:30px;
+}
+
+.action-panel,
+.transformation-panel-back {
+/*   border: 2px solid blue; */
+  border-radius: 5px;
+  height: 100%;
+/*   overflow-y: scroll; */
+  padding: 10px 10px;
+
+}
+.transformation-panel-back {
+  background-color:#e0e0eb;
+  border-radius:20px;
+  box-shadow: 0px 5px 10px #888888;
+
+}
+.transformation-panel-front{
+
+}
+
+.settings {
+  margin-bottom: 5px;
+/*   border: 2px solid blue; */
+}
+
+.setting {
+
+}
+
+.rule {
+  width: 100%;
+  font-size:1em;
+  padding:10px;
+  margin-bottom:10px;
+  background-color: #80d4ff;
+  border-radius:20px;
+  border: 0px solid blue;
+  box-shadow: 0px 5px 10px #888888;
+  outline:none !important;
+  text-decoration:none !important;
+  -webkit-transition:background-color 0.5s, box-shadow 0.1s;
+  transition:background-color 0.5s, box-shadow 0.1s;
+}
+
+.rule:hover{
+  background-color: #e6f7ff;
+}
+
+.rule:active{
+  box-shadow: 0px 0px 0px #000000;
+}
+
+
+
+.step {
+/*   background-color: lightblue; */
+/*   text-align: center; */
+/*   margin: 10px 10px; */
+  -webkit-transition:background-color 0.5s, box-shadow 0.5s;
+  transition:background-color 0.5s, box-shadow 0.5s;
+  box-shadow: 0px 5px 10px #888888;
+  font-size: 1em;
+  margin-bottom: 25px;
+}
+
+.step:hover{
+  box-shadow: 0px 5px 40px #888888;
+}
+
+.step-body{
+
+}
+
+.step a{
+  outline:none !important;
+  text-decoration:none !important;
+  display: block;
+  width:100%;
+  padding: 10px;
+  background-color: #efeff5;
+  border-radius: 5px;
+  color: black;
+}
+
+.step a:hover{
+  color: black;
+}
+
+.margin {
+  margin-top: 20px;
+}

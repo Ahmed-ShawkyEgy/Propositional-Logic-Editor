@@ -39,7 +39,8 @@
   }
 }
 
-rule = _ x:BiConditional _ {return x}
+root = _ x:BiConditional _ {return x}
+/ _ {return null}
 
 BiConditional
   = head:Implication tail:(_ ("↔") _ Implication)* {return buildBinaryTree(head,tail);}
