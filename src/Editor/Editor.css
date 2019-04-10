@@ -137,3 +137,12 @@ margin-bottom: 20px;
 .margin {
   margin-top: 20px;
 }
+
+.atom{
+  -webkit-transition:background-color 0.5s;
+  transition:background-color 0.5s;
+  font-size: 1.3em;
+  cursor: pointer;
+  padding: 10px 2px;
+  font-weight: 500;
+}

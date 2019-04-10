@@ -117,7 +117,8 @@ class Editor extends Component{
         key={index}
         onMouseOver={()=>this.onMouseOver(index)}
         onMouseOut={()=>this.onMouseOut(index)}
-        style={{backgroundColor:"rgba(255,100,100,"+alpha+")"}}
+        style={{backgroundColor:"rgba(255, 212, 128,"+alpha+")"}}
+        className="atom"
         >
         {atom}
         </span>
