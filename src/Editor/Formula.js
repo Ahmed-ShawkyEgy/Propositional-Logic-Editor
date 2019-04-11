@@ -23,7 +23,8 @@ class Formula extends Component{
           <CardBody>
           {this.props.body}
           <hr/>
-          Ф<sub>1</sub> = ( a → b )
+          Ф<sub>1</sub> = ( a → b ) <br/>
+          Ф<sub>2</sub> = ( c → d )
           </CardBody>
         </Card>
       </Collapse>
