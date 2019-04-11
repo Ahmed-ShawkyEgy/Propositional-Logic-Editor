@@ -30,31 +30,33 @@ class Editor extends Component{
       // Generate the parsing tree
       var tree = this.parser.parse(this.state.currentFormula);
       // Build the indexArray
-      this.setState({indexArray:this.buildIndexArray(tree,this.state.currentFormula)})
-      console.log();
-      console.log(tree);
+      this.buildIndexArray(tree,this.state.currentFormula)
     })
   }
 
 
   buildIndexArray(tree,formula)
   {
+    // filter out all empty spaces and brackets
     var  compressedFormula = formula.split("")
     .map((atom,index)=>{return {value:atom,index:index}})
     .filter((element)=>{return element.value!==')' && element.value!=='(' && element.value!==' '});
+
     var indexArray = new Array(formula.length).fill(null);
 
+    // Map the nodes of the tree to the indexArray
     this.buildIndexArrayDfs(tree,indexArray,0,compressedFormula);
-    return indexArray;
+    this.setState({indexArray:indexArray});
   }
 
   buildIndexArrayDfs(currentNode,indexArray,currentIndex,compressedFormula)
   {
-    // console.log(currentNode,indexArray,currentIndex);
     if(!currentNode)
       return currentIndex;
-    if(!currentNode.right)
+    // if currentNode is leaf
+    if(!currentNode.left && !currentNode.right)
     {
+        // map the indicies of the atom and the node together
         indexArray[compressedFormula[currentIndex].index] = currentNode;
         currentNode.index = compressedFormula[currentIndex].index;
         return currentIndex+1;
@@ -65,15 +67,6 @@ class Editor extends Component{
     indexArray[compressedFormula[currentIndex++].index] = currentNode;
 
     return this.buildIndexArrayDfs(currentNode.right,indexArray,currentIndex,compressedFormula);
-  }
-
-
-  updateTree(currentNode,key,value)
-  {
-    if(!currentNode)return;
-    currentNode[key] = value;
-    this.updateTree(currentNode.left,key,value);
-    this.updateTree(currentNode.right,key,value);
   }
 
   dfs(currentNode,fn,options)
@@ -100,18 +93,13 @@ class Editor extends Component{
         (node,options)=>{options.alphaColorArray[node.index] = 0;},
         {alphaColorArray:alphaColorArray});
     this.setState({alphaColorArray:alphaColorArray});
-
   }
 
   render()
   {
-    // var excercise = this.props.excercise;
       var currentFormula = this.state.currentFormula.split("").map((atom,index)=>{
       var alpha = this.state.alphaColorArray[index];
-      // var alpha = 0;
-      // if(this.state.indexArray[index])
-        // alpha = this.state.indexArray[index].highlight;
-      console.log(alpha);
+
       return(
       <span
         key={index}

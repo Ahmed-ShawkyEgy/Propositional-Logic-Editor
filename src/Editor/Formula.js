@@ -22,6 +22,8 @@ class Formula extends Component{
         <Card className="step-body">
           <CardBody>
           {this.props.body}
+          <hr/>
+          Ф<sub>1</sub> = ( a → b )
           </CardBody>
         </Card>
       </Collapse>
