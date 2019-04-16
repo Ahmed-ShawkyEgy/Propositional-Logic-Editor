@@ -14,28 +14,30 @@ class Editor extends Component{
       currentFormulaHeader:"1. InitialFormula",
       currentFormula:this.props.excercise.startingFormula,
 
-      // alphaColorArray is used to define the alpha of the highlighting color of the atoms of the formula
-      alphaColorArray:new Array(props.excercise.startingFormula.length).fill(0),
+      // colors is used to define the alpha of the highlighting color of the atoms of the formula
+      colors:new Array(props.excercise.startingFormula.length).fill(0),
 
-      // indexArray is used to map each atom in the formula to the corresponding node in the parsing tree
-      indexArray: new Array(props.excercise.startingFormula.length).fill(null)
+      // mapArray is used to map each atom in the formula to the corresponding node in the parsing tree
+      mapArray: new Array(props.excercise.startingFormula.length).fill(null)
     };
 
   }
 
   componentDidMount() {
-    fetch('/Grammer/LogicParsingGrammer.txt').then((r) => r.text())
+    fetch('/Grammer/ExtendedLogicParsingGrammer.txt').then((r) => r.text())
     .then(text  => {
       // Create the parser
       this.parser = peg.generate(text);
       // Generate the parsing tree
       var tree = this.parser.parse(this.state.currentFormula);
+      console.log(tree);
       // var formula = "(((a∨b)∧(c))∨d)∧e"
       // var tree = this.parser.parse(formula);
-      // Build the indexArray
-      this.buildIndexArray(tree,this.state.currentFormula)
-      // this.buildIndexArray(tree,formula)
+      // Build the mapArray
+      this.buildMap(tree,this.state.currentFormula)
+      // this.buildMap(tree,formula)
 
+      // console.log(this.state.mapArray);
       // console.log("Complete bracket sequencing: ",this.infixNotation(tree));
       // console.log("Postfix Notation: ",this.postfixNotation(tree));
       // console.log("Minimum Bracketing: ",this.minimumBracketing(this.postfixNotation(tree)));
@@ -43,64 +45,94 @@ class Editor extends Component{
   }
 
 
-  buildIndexArray(tree,formula)
+  buildMap(tree,formula)
   {
-    // filter out all empty spaces and brackets
+    // filter out all empty spaces
     var  compressedFormula = formula.split("")
     .map((atom,index)=>{return {value:atom,index:index}})
-    .filter((element)=>{return element.value!==')' && element.value!=='(' && element.value!==' '});
+    .filter((element)=>{return element.value!==' '});
 
-    var indexArray = new Array(formula.length).fill(null);
+    var mapArray = new Array(formula.length).fill(null);
 
-    // Map the nodes of the tree to the indexArray
-    this.buildIndexArrayDfs(tree,indexArray,0,compressedFormula);
-    this.setState({indexArray:indexArray});
+    console.log(compressedFormula);
+    console.log(tree);
+    // Map the nodes of the tree to the mapArray
+    this.buildMapDfs(tree,mapArray,0,compressedFormula);
+    this.setState({mapArray:mapArray});
   }
 
-  buildIndexArrayDfs(currentNode,indexArray,currentIndex,compressedFormula)
+  buildMapDfs(currentNode,mapArray,currentIndex,compressedFormula)
   {
     if(!currentNode)
       return currentIndex;
     // if currentNode is leaf
-    if(!currentNode.left && !currentNode.right)
+    if(currentNode.left===null && currentNode.right===null )
     {
         // map the indicies of the atom and the node together
-        indexArray[compressedFormula[currentIndex].index] = currentNode;
+        mapArray[compressedFormula[currentIndex].index] = currentNode;
         currentNode.index = compressedFormula[currentIndex].index;
         return currentIndex+1;
     }
-    currentIndex = this.buildIndexArrayDfs(currentNode.left,indexArray,currentIndex,compressedFormula);
+    else if(currentNode.symbol==="()")
+    {
+      mapArray[compressedFormula[currentIndex].index] = currentNode;
+      currentNode.index = [compressedFormula[currentIndex++].index];
 
-    currentNode.index = compressedFormula[currentIndex].index;
-    indexArray[compressedFormula[currentIndex++].index] = currentNode;
+      currentIndex = this.buildMapDfs(currentNode.right,mapArray,currentIndex,compressedFormula);
 
-    return this.buildIndexArrayDfs(currentNode.right,indexArray,currentIndex,compressedFormula);
+      mapArray[compressedFormula[currentIndex].index] = currentNode;
+      currentNode.index.push(compressedFormula[currentIndex++].index);
+      return currentIndex;
+    }
+    else{
+      currentIndex = this.buildMapDfs(currentNode.left,mapArray,currentIndex,compressedFormula);
+
+      currentNode.index = compressedFormula[currentIndex].index;
+      mapArray[compressedFormula[currentIndex++].index] = currentNode;
+
+      return this.buildMapDfs(currentNode.right,mapArray,currentIndex,compressedFormula);
+    }
   }
 
-  dfs(currentNode,fn,options)
+  dfs(currentNode,fn,params)
   {
     if(!currentNode)return;
-    fn(currentNode,options);
-    this.dfs(currentNode.left,fn,options);
-    this.dfs(currentNode.right,fn,options);
+    fn(currentNode,params);
+    this.dfs(currentNode.left,fn,params);
+    this.dfs(currentNode.right,fn,params);
   }
 
   onMouseOver(index){
-    var alphaColorArray = this.state.alphaColorArray.slice();
+    var colors = this.state.colors.slice();
     this.dfs(
-        this.state.indexArray[index],
-        (node,options)=>{options.alphaColorArray[node.index] = 10;},
-        {alphaColorArray:alphaColorArray});
-    this.setState({alphaColorArray:alphaColorArray});
+        this.state.mapArray[index],
+        (node,options)=>
+        {
+          if(node.symbol==="()")
+          {
+            options.colors[node.index[0]] = "rgb(255, 212, 128)";
+            options.colors[node.index[1]] = "rgb(255, 212, 128)";
+          }
+          options.colors[node.index] = "rgb(255, 212, 128)";
+        },
+        {colors:colors});
+    this.setState({colors:colors});
   }
 
   onMouseOut(index){
-    var alphaColorArray = this.state.alphaColorArray.slice();
+    var colors = this.state.colors.slice();
     this.dfs(
-        this.state.indexArray[index],
-        (node,options)=>{options.alphaColorArray[node.index] = 0;},
-        {alphaColorArray:alphaColorArray});
-    this.setState({alphaColorArray:alphaColorArray});
+        this.state.mapArray[index],
+        (node,options)=>{
+          if(node.symbol==="()")
+          {
+            options.colors[node.index[0]] = "rgb(255,255,255)";
+            options.colors[node.index[1]] = "rgb(255,255,255)";
+          }
+          options.colors[node.index] = "rgb(255,255,255)";
+        },
+        {colors:colors});
+    this.setState({colors:colors});
   }
 
   infixNotation(curNode)
@@ -169,14 +201,14 @@ class Editor extends Component{
   render()
   {
       var currentFormula = this.state.currentFormula.split("").map((atom,index)=>{
-      var alpha = this.state.alphaColorArray[index];
+      var alpha = this.state.colors[index];
 
       return(
       <span
         key={index}
         onMouseOver={()=>this.onMouseOver(index)}
         onMouseOut={()=>this.onMouseOut(index)}
-        style={{backgroundColor:"rgba(255, 212, 128,"+alpha+")"}}
+        style={{backgroundColor:alpha}}
         className="atom"
         >
         {atom}
