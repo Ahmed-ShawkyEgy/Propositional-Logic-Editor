@@ -9,17 +9,28 @@ class Editor extends Component{
 
   constructor(props){
     super(props);
+    this.onSelectedSubMouseOver = this.onSelectedSubMouseOver.bind(this);
+    this.onSelectedSubMouseOut = this.onSelectedSubMouseOut.bind(this);
+
     this.state = {
       collapse:[true,false],
       currentFormulaHeader:"1. InitialFormula",
       currentFormula:this.props.excercise.startingFormula,
 
-      // colors is used to define the alpha of the highlighting color of the atoms of the formula
+      // colors is used to define the highlighting color of the sub-formulas
       colors:new Array(props.excercise.startingFormula.length).fill(0),
 
       // mapArray is used to map each atom in the formula to the corresponding node in the parsing tree
-      mapArray: new Array(props.excercise.startingFormula.length).fill(null)
+      mapArray: new Array(props.excercise.startingFormula.length).fill(null),
+
+      subFormulas: [],
     };
+
+    this.statics = {
+      HIGHLIGHT_COLOR:"rgb(255,212,128)",
+      SELECT_COLOR:"rgb(170, 240,190)",
+      DESELECT_COLOR:"rgb(255,255,255)"
+    }
 
   }
 
@@ -30,7 +41,7 @@ class Editor extends Component{
       this.parser = peg.generate(text);
       // Generate the parsing tree
       var tree = this.parser.parse(this.state.currentFormula);
-      console.log(tree);
+      // console.log(tree);
       // var formula = "(((a∨b)∧(c))∨d)∧e"
       // var tree = this.parser.parse(formula);
       // Build the mapArray
@@ -54,8 +65,6 @@ class Editor extends Component{
 
     var mapArray = new Array(formula.length).fill(null);
 
-    console.log(compressedFormula);
-    console.log(tree);
     // Map the nodes of the tree to the mapArray
     this.buildMapDfs(tree,mapArray,0,compressedFormula);
     this.setState({mapArray:mapArray});
@@ -94,6 +103,8 @@ class Editor extends Component{
     }
   }
 
+  // A generic dfs function that runs a dfs traversal at a given node and applies the function fn
+  // on each node while passing the object params to fn
   dfs(currentNode,fn,params)
   {
     if(!currentNode)return;
@@ -102,7 +113,44 @@ class Editor extends Component{
     this.dfs(currentNode.right,fn,params);
   }
 
-  onMouseOver(index){
+  select(root , subFormulas){
+    subFormulas.push(root);
+    this.dfs(root,(node,params)=>{
+      node.isSelected = true;
+      node.subFormulaIndex = params.subFormulaIndex;
+    },{subFormulaIndex:subFormulas.length});
+  }
+
+  deSelect(root , subFormulas){
+    console.log(root);
+    this.dfs(root,
+      (node,params)=>{
+        node.isSelected = false;
+      }
+    );
+    for (var i = 0; i < subFormulas.length; i++) {
+      if(!subFormulas[i].isSelected)
+      {
+        subFormulas.splice(i--,1);
+      }
+    }
+  }
+
+
+  onSubFormulaClick(index){
+    var root = this.state.mapArray[index];
+    if(!root)return;
+    if(!root.isSelected)
+    {
+      var subFormulas = this.state.subFormulas.slice();
+      this.deSelect(root,subFormulas);
+      this.select(root,subFormulas);
+      this.setState({subFormulas:subFormulas})
+    }
+
+  }
+
+  onSubFormulaMouseOver(index){
     var colors = this.state.colors.slice();
     this.dfs(
         this.state.mapArray[index],
@@ -110,110 +158,68 @@ class Editor extends Component{
         {
           if(node.symbol==="()")
           {
-            options.colors[node.index[0]] = "rgb(255, 212, 128)";
-            options.colors[node.index[1]] = "rgb(255, 212, 128)";
+            options.colors[node.index[0]] = this.statics.HIGHLIGHT_COLOR;
+            options.colors[node.index[1]] = this.statics.HIGHLIGHT_COLOR;
           }
-          options.colors[node.index] = "rgb(255, 212, 128)";
+          options.colors[node.index] = this.statics.HIGHLIGHT_COLOR;
         },
         {colors:colors});
     this.setState({colors:colors});
   }
 
-  onMouseOut(index){
+  onSubFormulaMouseOut(index){
     var colors = this.state.colors.slice();
     this.dfs(
         this.state.mapArray[index],
         (node,options)=>{
           if(node.symbol==="()")
           {
-            options.colors[node.index[0]] = "rgb(255,255,255)";
-            options.colors[node.index[1]] = "rgb(255,255,255)";
+            options.colors[node.index[0]] = this.statics.DESELECT_COLOR;
+            options.colors[node.index[1]] = this.statics.DESELECT_COLOR;
+
+            if(node.isSelected)
+            {
+              options.colors[node.index[0]] = this.statics.SELECT_COLOR;
+              options.colors[node.index[1]] = this.statics.SELECT_COLOR;
+            }
           }
-          options.colors[node.index] = "rgb(255,255,255)";
+          options.colors[node.index] = this.statics.DESELECT_COLOR;
+          if(node.isSelected)
+          {
+            options.colors[node.index] = this.statics.SELECT_COLOR;
+          }
         },
         {colors:colors});
     this.setState({colors:colors});
   }
 
-  infixNotation(curNode)
+  onSelectedSubMouseOver(index)
   {
-    if(!curNode)
-      return "";
-    if(!curNode.left && !curNode.right)
-      return curNode.symbol;
-    var leftSubTree = curNode.left? this.infixNotation(curNode.left):"";
-    var rightSubTree = curNode.right? this.infixNotation(curNode.right):"";
-    return "( " + leftSubTree + " " + curNode.symbol + " " + rightSubTree + " )";
+      this.onSubFormulaMouseOver(index);
   }
 
-  postfixNotation(curNode)
+  onSelectedSubMouseOut(index)
   {
-    if(!curNode)
-      return "";
-    if(!curNode.left && !curNode.right)
-      return curNode.symbol;
-    var leftSubTree = curNode.left? this.postfixNotation(curNode.left):"";
-    var rightSubTree = curNode.right? this.postfixNotation(curNode.right):"";
-    return leftSubTree+rightSubTree+curNode.symbol;
-  }
-
-
-  minimumBracketing(formula)
-  {
-    var operandStack = [] , operatorsStack = [] ,operators = ['⊤','⊥','¬','∧','∨','→','↔'];
-    for(var i = 0; i < formula.length;i++)
-    {
-      var term = formula[i];
-      // if this term is not an operator
-      if(operators.indexOf(term)===-1)
-      {
-        operandStack.push(term);
-        operatorsStack.push(null);
-      }
-      else if(term !== '¬')
-      {
-          var secondOperand = operandStack.pop() ,  firstOperand = operandStack.pop();
-          var secondOperator  = operatorsStack.pop() ,firstOperator  = operatorsStack.pop();
-
-
-          if(firstOperator && operators.indexOf(firstOperator) > operators.indexOf(term))
-            firstOperand = "( " + firstOperand + " )";
-          if(secondOperator && operators.indexOf(secondOperator) > operators.indexOf(term))
-            secondOperand = "( " + secondOperand + " )";
-          operandStack.push(firstOperand + " " + term + " " + secondOperand);
-          operatorsStack.push(term);
-      }
-      else
-      {
-          var operand = operandStack.pop() , operator = operatorsStack.pop();
-
-
-          if(operator)
-            operandStack.push(term+" ( " + operand + " )" );
-          else
-            operandStack.push(term+" " + operand + " " );
-          operatorsStack.push(term);
-      }
-    }
-    return operandStack.pop();
+    this.onSubFormulaMouseOut(index);
   }
 
   render()
   {
       var currentFormula = this.state.currentFormula.split("").map((atom,index)=>{
-      var alpha = this.state.colors[index];
+        var color = this.state.colors[index];
 
-      return(
-      <span
-        key={index}
-        onMouseOver={()=>this.onMouseOver(index)}
-        onMouseOut={()=>this.onMouseOut(index)}
-        style={{backgroundColor:alpha}}
-        className="atom"
-        >
-        {atom}
-        </span>
-    )});
+        return(
+        <span
+          key={index}
+          onMouseOver={()=>this.onSubFormulaMouseOver(index)}
+          onMouseOut={()=>this.onSubFormulaMouseOut(index)}
+          onClick={()=>this.onSubFormulaClick(index)}
+          style={{backgroundColor:color}}
+          className="atom"
+          >
+          {atom}
+          </span>
+      )});
     return (
       <Container fluid={true}>
      <Row>
@@ -268,6 +274,9 @@ class Editor extends Component{
                      <Formula
                        header={this.state.currentFormulaHeader}
                        body={currentFormula}
+                       subFormulas={this.state.subFormulas}
+                       onSubFormulaHover={this.onSelectedSubMouseOver}
+                       onSubFormulaOut={this.onSelectedSubMouseOut}
                      />
 
 

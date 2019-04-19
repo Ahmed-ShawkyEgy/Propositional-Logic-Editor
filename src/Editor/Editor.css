@@ -134,6 +134,11 @@ margin-bottom: 20px;
   color: black;
 }
 
+.sub-formula{
+  cursor: pointer;
+
+}
+
 .margin {
   margin-top: 20px;
 }
