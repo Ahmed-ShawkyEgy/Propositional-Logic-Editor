@@ -9,8 +9,9 @@ class Editor extends Component{
 
   constructor(props){
     super(props);
-    this.onSelectedSubMouseOver = this.onSelectedSubMouseOver.bind(this);
-    this.onSelectedSubMouseOut = this.onSelectedSubMouseOut.bind(this);
+
+    this.onSubFormulaMouseOver = this.onSubFormulaMouseOver.bind(this);
+    this.onSubFormulaMouseOut = this.onSubFormulaMouseOut.bind(this);
 
     this.state = {
       collapse:[true,false],
@@ -193,16 +194,6 @@ class Editor extends Component{
     this.setState({colors:colors});
   }
 
-  onSelectedSubMouseOver(index)
-  {
-      this.onSubFormulaMouseOver(index);
-  }
-
-  onSelectedSubMouseOut(index)
-  {
-    this.onSubFormulaMouseOut(index);
-  }
-
   render()
   {
       var currentFormula = this.state.currentFormula.split("").map((atom,index)=>{
@@ -275,8 +266,8 @@ class Editor extends Component{
                        header={this.state.currentFormulaHeader}
                        body={currentFormula}
                        subFormulas={this.state.subFormulas}
-                       onSubFormulaHover={this.onSelectedSubMouseOver}
-                       onSubFormulaOut={this.onSelectedSubMouseOut}
+                       onSubFormulaHover={this.onSubFormulaMouseOver}
+                       onSubFormulaOut={this.onSubFormulaMouseOut}
                      />
 
 

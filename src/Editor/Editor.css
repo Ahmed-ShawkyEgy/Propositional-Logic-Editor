@@ -136,7 +136,14 @@ margin-bottom: 20px;
 
 .sub-formula{
   cursor: pointer;
+  -webkit-transition:background-color 1s;
+  transition:background-color 1s;
+  border-radius: 7px;
+  padding-left: 5px;
+}
 
+.sub-formula:hover{
+  background-color:#e0e0e0;
 }
 
 .margin {
