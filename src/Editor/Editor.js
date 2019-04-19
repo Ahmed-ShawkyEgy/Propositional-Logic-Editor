@@ -14,7 +14,6 @@ class Editor extends Component{
     this.onSubFormulaMouseOut = this.onSubFormulaMouseOut.bind(this);
 
     this.state = {
-      collapse:[true,false],
       currentFormulaHeader:"1. InitialFormula",
       currentFormula:this.props.excercise.startingFormula,
 
@@ -155,14 +154,14 @@ class Editor extends Component{
     var colors = this.state.colors.slice();
     this.dfs(
         this.state.mapArray[index],
-        (node,options)=>
+        (node,params)=>
         {
           if(node.symbol==="()")
           {
-            options.colors[node.index[0]] = this.statics.HIGHLIGHT_COLOR;
-            options.colors[node.index[1]] = this.statics.HIGHLIGHT_COLOR;
+            params.colors[node.index[0]] = this.statics.HIGHLIGHT_COLOR;
+            params.colors[node.index[1]] = this.statics.HIGHLIGHT_COLOR;
           }
-          options.colors[node.index] = this.statics.HIGHLIGHT_COLOR;
+          params.colors[node.index] = this.statics.HIGHLIGHT_COLOR;
         },
         {colors:colors});
     this.setState({colors:colors});
@@ -172,22 +171,22 @@ class Editor extends Component{
     var colors = this.state.colors.slice();
     this.dfs(
         this.state.mapArray[index],
-        (node,options)=>{
+        (node,params)=>{
           if(node.symbol==="()")
           {
-            options.colors[node.index[0]] = this.statics.DESELECT_COLOR;
-            options.colors[node.index[1]] = this.statics.DESELECT_COLOR;
+            params.colors[node.index[0]] = this.statics.DESELECT_COLOR;
+            params.colors[node.index[1]] = this.statics.DESELECT_COLOR;
 
             if(node.isSelected)
             {
-              options.colors[node.index[0]] = this.statics.SELECT_COLOR;
-              options.colors[node.index[1]] = this.statics.SELECT_COLOR;
+              params.colors[node.index[0]] = this.statics.SELECT_COLOR;
+              params.colors[node.index[1]] = this.statics.SELECT_COLOR;
             }
           }
-          options.colors[node.index] = this.statics.DESELECT_COLOR;
+          params.colors[node.index] = this.statics.DESELECT_COLOR;
           if(node.isSelected)
           {
-            options.colors[node.index] = this.statics.SELECT_COLOR;
+            params.colors[node.index] = this.statics.SELECT_COLOR;
           }
         },
         {colors:colors});

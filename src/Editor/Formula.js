@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card,Collapse,CardBody } from 'reactstrap';
 import ParserUtil from '../Util/ParserUtility'
 import { Row,Col } from 'reactstrap';
+import 'font-awesome/css/font-awesome.min.css';
 
 class Formula extends Component{
 
@@ -21,17 +22,22 @@ class Formula extends Component{
     var subFormulas = "";
     if(this.props.subFormulas)
       subFormulas = this.props.subFormulas.slice().map((tree,idx)=>{
+
         return(
           <Row>
-            <Col lg="12">
+            <Col lg="11">
            <div
 
              className="sub-formula"
-             onMouseOver={()=>{this.props.onSubFormulaHover(tree.index)}}
-             onMouseOut={()=>{this.props.onSubFormulaOut(tree.index)}}
+             onMouseOver={()=>{this.props.onSubFormulaHover(Array.isArray(tree.index)?tree.index[0]:tree.index)}}
+             onMouseOut={()=>{this.props.onSubFormulaOut(Array.isArray(tree.index)?tree.index[0]:tree.index)}}
              >
               Ф<sub>{idx}</sub> = {ParserUtil.infixNotation(tree)}<br/>
           </div>
+          </Col>
+          <Col lg="1">
+            <div className="fa fa-close">
+            </div>
           </Col>
         </Row>
         )}) ;
