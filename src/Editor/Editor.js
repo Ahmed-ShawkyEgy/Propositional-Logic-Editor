@@ -155,6 +155,7 @@ class Editor extends Component{
     var subFormulas = this.state.subFormulas.slice();
     this.deSelect(root,subFormulas);
     this.setState({subFormulas:subFormulas})
+    this.onSubFormulaMouseOut(Array.isArray(root.index)?root.index[0]:root.index);
   }
 
   onSubFormulaMouseOver(index){
