@@ -22,21 +22,28 @@ class Formula extends Component{
     var subFormulas = "";
     if(this.props.subFormulas)
       subFormulas = this.props.subFormulas.slice().map((tree,idx)=>{
-
+        var treeIndex = Array.isArray(tree.index)?tree.index[0]:tree.index;
         return(
           <Row>
             <Col lg="11">
            <div
 
              className="sub-formula"
-             onMouseOver={()=>{this.props.onSubFormulaHover(Array.isArray(tree.index)?tree.index[0]:tree.index)}}
-             onMouseOut={()=>{this.props.onSubFormulaOut(Array.isArray(tree.index)?tree.index[0]:tree.index)}}
+             onMouseOver={()=>{this.props.onSubFormulaHover(treeIndex)}}
+             onMouseOut={()=>{this.props.onSubFormulaOut(treeIndex)}}
              >
               Ф<sub>{idx}</sub> = {ParserUtil.infixNotation(tree)}<br/>
           </div>
           </Col>
-          <Col lg="1">
-            <div className="fa fa-close">
+          <Col lg="1"
+            onMouseOver={()=>{this.props.onSubFormulaHover(treeIndex)}}
+            onMouseOut={()=>{this.props.onSubFormulaOut(treeIndex)}}
+            onClick={()=>{this.props.onSubFormulaRemove(tree)}}
+            >
+            <div
+              className="fa fa-times-circle sub-formula-remove "
+              aria-hidden="true"
+              >
             </div>
           </Col>
         </Row>

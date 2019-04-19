@@ -12,6 +12,7 @@ class Editor extends Component{
 
     this.onSubFormulaMouseOver = this.onSubFormulaMouseOver.bind(this);
     this.onSubFormulaMouseOut = this.onSubFormulaMouseOut.bind(this);
+    this.onSubFormulaRemove = this.onSubFormulaRemove.bind(this);
 
     this.state = {
       currentFormulaHeader:"1. InitialFormula",
@@ -147,7 +148,13 @@ class Editor extends Component{
       this.select(root,subFormulas);
       this.setState({subFormulas:subFormulas})
     }
+  }
 
+  onSubFormulaRemove(root)
+  {
+    var subFormulas = this.state.subFormulas.slice();
+    this.deSelect(root,subFormulas);
+    this.setState({subFormulas:subFormulas})
   }
 
   onSubFormulaMouseOver(index){
@@ -267,6 +274,7 @@ class Editor extends Component{
                        subFormulas={this.state.subFormulas}
                        onSubFormulaHover={this.onSubFormulaMouseOver}
                        onSubFormulaOut={this.onSubFormulaMouseOut}
+                       onSubFormulaRemove={this.onSubFormulaRemove}
                      />
 
 
