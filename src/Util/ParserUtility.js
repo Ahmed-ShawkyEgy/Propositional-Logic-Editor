@@ -1,4 +1,40 @@
 class ParserUtil{
+
+  // A generic dfs function that runs a dfs traversal at a given node and applies the function fn
+  // on each node while passing the object params to fn
+  static dfs(currentNode,fn,params)
+  {
+    if(!currentNode)return;
+    fn(currentNode,params);
+    this.dfs(currentNode.left,fn,params);
+    this.dfs(currentNode.right,fn,params);
+  }
+
+  static countLeaves(tree)
+  {
+    var params = {leavesCount:0};
+    ParserUtil.dfs(tree,(node,params)=>{if(!node.left&&!node.right)params.leavesCount++;},params);
+    return params.leavesCount;
+  }
+
+  static cloneTree(currentNode)
+  {
+    if(!currentNode)return null;
+    return {
+      symbol:currentNode.symbol,
+      left:ParserUtil.cloneTree(currentNode.left),
+      right:ParserUtil.cloneTree(currentNode.right),
+    };
+  }
+
+  static compareTrees(node1,node2)
+  {
+    if((!node1 && node2) || (!node2 && node1))return false;
+    if(!node1 && !node2)return true;
+    if(node1.symbol!==node2.symbol)return false;
+    return ParserUtil.compareTrees(node1.left,node2.left) && ParserUtil.compareTrees(node1.right,node2.right);
+  }
+
   static infixNotation(curNode)
   {
     if(!curNode)
@@ -65,5 +101,21 @@ class ParserUtil{
     }
     return operandStack.pop();
   }
+
+  static getFormulaAtoms(formulaTree)
+  {
+    var atoms = [];
+    this.dfs(formulaTree,(node,params)=>
+    {
+      if(node && !node.left && !node.right )
+      {
+        if(!params.atoms.includes(node.symbol))
+          params.atoms.push(node.symbol);
+      }
+    }
+    ,{atoms:atoms});
+    return atoms;
+  }
+
 }
 export default ParserUtil;

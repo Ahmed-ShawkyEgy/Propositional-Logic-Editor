@@ -4,6 +4,7 @@ import { Container, Row, Col, } from 'reactstrap';
 import './Editor.css';
 import 'font-awesome/css/font-awesome.min.css';
 import Formula from './Formula';
+import ParserUtil from '../Util/ParserUtility'
 
 class Editor extends Component{
 
@@ -13,6 +14,8 @@ class Editor extends Component{
     this.onSubFormulaMouseOver = this.onSubFormulaMouseOver.bind(this);
     this.onSubFormulaMouseOut = this.onSubFormulaMouseOut.bind(this);
     this.onSubFormulaRemove = this.onSubFormulaRemove.bind(this);
+    this.onRuleClick = this.onRuleClick.bind(this);
+    this.transformationIsValid = this.transformationIsValid.bind(this);
 
     this.state = {
       currentFormulaHeader:"1. InitialFormula",
@@ -33,6 +36,9 @@ class Editor extends Component{
       DESELECT_COLOR:"rgb(255,255,255)"
     }
 
+    this.transformationRules = this.props.excercise.transformationRules.slice();
+    this.transformationRulesTrees = [];
+
   }
 
   componentDidMount() {
@@ -48,12 +54,15 @@ class Editor extends Component{
       // Build the mapArray
       this.buildMap(tree,this.state.currentFormula)
       // this.buildMap(tree,formula)
-
+      this.root = tree;
       // console.log(this.state.mapArray);
       // console.log("Complete bracket sequencing: ",this.infixNotation(tree));
       // console.log("Postfix Notation: ",this.postfixNotation(tree));
       // console.log("Minimum Bracketing: ",this.minimumBracketing(this.postfixNotation(tree)));
-    })
+
+      this.parseTransformationRules();
+    });
+
   }
 
 
@@ -104,29 +113,38 @@ class Editor extends Component{
     }
   }
 
-  // A generic dfs function that runs a dfs traversal at a given node and applies the function fn
-  // on each node while passing the object params to fn
-  dfs(currentNode,fn,params)
+  parseTransformationRules()
   {
-    if(!currentNode)return;
-    fn(currentNode,params);
-    this.dfs(currentNode.left,fn,params);
-    this.dfs(currentNode.right,fn,params);
+    for(var i  = 0; i < this.transformationRules.length;i++)
+    {
+      var rule = this.transformationRules[i].value;
+      var index = rule.indexOf('≡');
+      var leftHandSide = rule.substring(0,index);
+      var rightHandSide = rule.substring(index+1);
+      var tree = {
+        leftHandSide:this.parser.parse(leftHandSide),
+        rightHandSide:this.parser.parse(rightHandSide)
+      };
+      this.transformationRulesTrees.push(tree);
+    }
   }
+
 
   select(root , subFormulas){
     subFormulas.push(root);
-    this.dfs(root,(node,params)=>{
+    root.isSubFormulaRoot = true;
+    ParserUtil.dfs(root,(node,params)=>{
       node.isSelected = true;
       node.subFormulaIndex = params.subFormulaIndex;
     },{subFormulaIndex:subFormulas.length});
   }
 
   deSelect(root , subFormulas){
-    console.log(root);
-    this.dfs(root,
+    ParserUtil.dfs(root,
       (node,params)=>{
         node.isSelected = false;
+        node.isSubFormulaRoot = false;
+        node.subFormulaIndex = null;
       }
     );
     for (var i = 0; i < subFormulas.length; i++) {
@@ -160,7 +178,7 @@ class Editor extends Component{
 
   onSubFormulaMouseOver(index){
     var colors = this.state.colors.slice();
-    this.dfs(
+    ParserUtil.dfs(
         this.state.mapArray[index],
         (node,params)=>
         {
@@ -177,7 +195,7 @@ class Editor extends Component{
 
   onSubFormulaMouseOut(index){
     var colors = this.state.colors.slice();
-    this.dfs(
+    ParserUtil.dfs(
         this.state.mapArray[index],
         (node,params)=>{
           if(node.symbol==="()")
@@ -201,6 +219,66 @@ class Editor extends Component{
     this.setState({colors:colors});
   }
 
+  onRuleClick(ruleIndex){
+    if(this.transformationIsValid(ruleIndex))
+    {
+      console.log("Valid !!!");
+      return;
+    }
+    console.log("transformation is Invalid");
+  }
+
+  transformationIsValid(ruleIndex)
+  {
+    var rule = this.transformationRules[ruleIndex].value;
+    var ruleTree = this.transformationRulesTrees[ruleIndex].leftHandSide;
+    // Check if the number of selected subFormulas is the same as the number of atoms
+    // of the transformation rule
+    if(this.state.subFormulas.length !== ParserUtil.countLeaves(ruleTree))
+      return false;
+    var transformationAtoms = ParserUtil.getFormulaAtoms(ruleTree);
+
+    return this.checkTransformationMatching(this.root,ruleTree,transformationAtoms);
+  }
+
+  checkTransformationMatching(formulaNode,transformationTree,transformationAtoms)
+  {
+    if(!formulaNode)return false;
+    var transformationMap = {};
+    for(var i = 0; i < transformationAtoms.length;i++)
+      transformationMap[transformationAtoms[i]] = null;
+    if(this.checkTransformationMatchingHelper(formulaNode,transformationTree,transformationMap))
+    {
+      console.log(transformationMap);
+      return true;
+    }
+    return this.checkTransformationMatching(formulaNode.left,transformationTree,transformationAtoms)
+    || this.checkTransformationMatching(formulaNode.right,transformationTree,transformationAtoms)
+  }
+
+  checkTransformationMatchingHelper(formulaNode,transformationNode,transformationMap)
+  {
+    if(!transformationNode || !formulaNode)return true;
+    // if this is a transformation atom
+    if(!transformationNode.left && !transformationNode.right)
+    {
+      if(!formulaNode.isSubFormulaRoot)return false;
+      if(!transformationMap[transformationNode.symbol])
+      {
+        transformationMap[transformationNode.symbol] = ParserUtil.cloneTree(formulaNode);
+        return true;
+      }
+      else {
+        return ParserUtil.compareTrees(transformationMap[transformationNode.symbol] , formulaNode);
+      }
+    }
+    else{
+      if(formulaNode.symbol !== transformationNode.symbol)return false;
+      return this.checkTransformationMatchingHelper(formulaNode.left,transformationNode.left,transformationMap)
+      && this.checkTransformationMatchingHelper(formulaNode.right,transformationNode.right,transformationMap)
+    }
+  }
+
   render()
   {
       var currentFormula = this.state.currentFormula.split("").map((atom,index)=>{
@@ -218,6 +296,16 @@ class Editor extends Component{
           {atom}
           </span>
       )});
+
+      var transformationRules = this.transformationRules.map((rule,index)=>{return (
+        <button
+          onClick={()=>this.onRuleClick(index)}
+          key={index}
+          value={rule.value}
+          className="rule"
+          dangerouslySetInnerHTML={{__html:rule.label}}></button>
+      )});
+
     return (
       <Container fluid={true}>
      <Row>
@@ -298,13 +386,7 @@ class Editor extends Component{
                        <hr/>
                      </Col>
                    </Row>
-                   <button className="rule">a ≡ a ∨ ¬a</button>
-                   <button className="rule">(a ∨ ¬a) ∧ b ≡ b</button>
-                   <button className="rule">a → b ≡ ¬a ∨ b</button>
-                   <button className="rule">a ∨ b ≡ b ∨ a</button>
-                   <button className="rule">a ∧ (b ∧ c) ≡ a ∧ b ∧ c</button>
-                   <button className="rule">a → a ≡ a</button>
-                   <button className="rule">a → (b ∧ ¬b) ≡ a</button>
+                   {transformationRules}
                  </div>
                </Col>
 

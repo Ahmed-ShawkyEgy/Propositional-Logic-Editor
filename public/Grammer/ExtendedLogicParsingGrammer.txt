@@ -1,25 +1,15 @@
 ﻿{
-  class Node 
-  { 
-      constructor(data) 
-      { 
-          this.symbol = data;
-          this.left = null; 
-          this.right = null; 
-      } 
-  }
-
   function buildBinaryTree(left,right)
   { 
 	if(!right || right.length == 0) return left;
-  	var root = new Node(right[0][1]);
+  	var root = {symbol:right[0][1]};
     root.right = right[0][3];
     root.left = left;
     for(var i = 1; i <right.length;i++)
     {
     	var symbol = right[i][1];
         var leftSubTree = root;
-        root = new Node(symbol);
+        root = {symbol:symbol};
         root.left = leftSubTree;
         root.right = right[i][3];
     }
@@ -32,7 +22,7 @@
       for(var i = 0; i < count;i++)
       {
           var subTree = root;
-          root = new Node(symbol);
+          root = {symbol:symbol};
           root.right = subTree;
       }
       return root;
@@ -57,15 +47,15 @@ Conjunction
 Factor
   = 
   negations:(_ '¬' _)* "(" _ expr:BiConditional _ ")" {
-  var operand = new Node("()");
+  var operand = {symbol:"()"};
   operand.right = expr;
   return buildUnaryTree('¬',negations.length,operand);
   }
 / negations:(_ '¬' _)* operand:Operand {return buildUnaryTree('¬',negations.length,operand);}
 
 Operand
-  = _ atom:([a-z] [a-zA-Z0-9]*) { return new Node(atom[0] + atom[1].join("")); }
-  / _ atom:('⊤'/'⊥') {return new Node(atom);}
+  = _ atom:([a-z] [a-zA-Z0-9]*) { return {symbol:atom[0] + atom[1].join("")}; }
+  / _ atom:('⊤'/'⊥') {return {symbol:atom}}
 
 _ "whitespace"
   = [ \t\n\r]*

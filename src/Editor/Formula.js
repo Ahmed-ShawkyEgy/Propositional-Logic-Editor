@@ -36,13 +36,13 @@ class Formula extends Component{
           </div>
           </Col>
           <Col lg="1"
-            onMouseOver={()=>{this.props.onSubFormulaHover(treeIndex)}}
-            onMouseOut={()=>{this.props.onSubFormulaOut(treeIndex)}}
-            onClick={()=>{this.props.onSubFormulaRemove(tree)}}
             >
             <div
               className="fa fa-times-circle sub-formula-remove "
               aria-hidden="true"
+              onMouseOver={()=>{this.props.onSubFormulaHover(treeIndex)}}
+              onMouseOut={()=>{this.props.onSubFormulaOut(treeIndex)}}
+              onClick={()=>{this.props.onSubFormulaRemove(tree)}}
               >
             </div>
           </Col>

@@ -51,6 +51,7 @@ class ExcerciseForm extends Component {
 
   onSubmit(e){
     e.preventDefault();
+    console.log(this.state.selectedTransformations);
     if(this.parser)
     {
       try{
