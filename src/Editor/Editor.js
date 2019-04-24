@@ -46,23 +46,29 @@ class Editor extends Component{
     .then(text  => {
       // Create the parser
       this.parser = peg.generate(text);
-      // Generate the parsing tree
-      var tree = this.parser.parse(this.state.currentFormula);
-      // console.log(tree);
-      // var formula = "(((a∨b)∧(c))∨d)∧e"
-      // var tree = this.parser.parse(formula);
-      // Build the mapArray
-      this.buildMap(tree,this.state.currentFormula)
-      // this.buildMap(tree,formula)
-      this.root = tree;
-      // console.log(this.state.mapArray);
-      // console.log("Complete bracket sequencing: ",this.infixNotation(tree));
-      // console.log("Postfix Notation: ",this.postfixNotation(tree));
-      // console.log("Minimum Bracketing: ",this.minimumBracketing(this.postfixNotation(tree)));
-
+      this.setNewFormula(this.state.currentFormulaHeader,this.state.currentFormula)
       this.parseTransformationRules();
     });
 
+  }
+
+  setNewFormula(formulaHeader,formula)
+  {
+    var tree = this.parser.parse(formula);
+    ParserUtil.attachParentsToTree(tree);
+    this.buildMap(tree,formula);
+    this.root = tree;
+    this.setState({
+      currentFormulaHeader:formulaHeader,
+      currentFormula:formula,
+
+      // colors is used to define the highlighting color of the sub-formulas
+      colors:new Array(formula.length).fill(this.statics.DESELECT_COLOR),
+
+      subFormulas: [],
+    });
+    this.deSelect(this.root,this.state.subFormulas);
+    console.log(this.root);
   }
 
 
@@ -220,9 +226,11 @@ class Editor extends Component{
   }
 
   onRuleClick(ruleIndex){
-    if(this.transformationIsValid(ruleIndex))
+    var transformationStatus = this.transformationIsValid(ruleIndex);
+    if(transformationStatus)
     {
       console.log("Valid !!!");
+      this.applyTransformation(ruleIndex,transformationStatus.subFormulaRoot,transformationStatus.transformationMap);
       return;
     }
     console.log("transformation is Invalid");
@@ -230,7 +238,6 @@ class Editor extends Component{
 
   transformationIsValid(ruleIndex)
   {
-    var rule = this.transformationRules[ruleIndex].value;
     var ruleTree = this.transformationRulesTrees[ruleIndex].leftHandSide;
     // Check if the number of selected subFormulas is the same as the number of atoms
     // of the transformation rule
@@ -243,14 +250,14 @@ class Editor extends Component{
 
   checkTransformationMatching(formulaNode,transformationTree,transformationAtoms)
   {
-    if(!formulaNode)return false;
+    if(!formulaNode)return null;
     var transformationMap = {};
     for(var i = 0; i < transformationAtoms.length;i++)
       transformationMap[transformationAtoms[i]] = null;
     if(this.checkTransformationMatchingHelper(formulaNode,transformationTree,transformationMap))
     {
       console.log(transformationMap);
-      return true;
+      return {subFormulaRoot:formulaNode,transformationMap:transformationMap};
     }
     return this.checkTransformationMatching(formulaNode.left,transformationTree,transformationAtoms)
     || this.checkTransformationMatching(formulaNode.right,transformationTree,transformationAtoms)
@@ -276,6 +283,51 @@ class Editor extends Component{
       if(formulaNode.symbol !== transformationNode.symbol)return false;
       return this.checkTransformationMatchingHelper(formulaNode.left,transformationNode.left,transformationMap)
       && this.checkTransformationMatchingHelper(formulaNode.right,transformationNode.right,transformationMap)
+    }
+  }
+
+  applyTransformation(ruleIndex,subFormulaRoot,transformationMap)
+  {
+    var ruleTree = ParserUtil.cloneTree(this.transformationRulesTrees[ruleIndex].rightHandSide);
+    ParserUtil.attachParentsToTree(ruleTree);
+
+    if(!ruleTree.left && !ruleTree.right)
+      ruleTree = transformationMap[ruleTree.symbol];
+    else
+      this.applyTransformationHelper(ruleTree,transformationMap);
+
+    if(subFormulaRoot.leftParent)
+    {
+        subFormulaRoot.leftParent.left = ruleTree;
+    }
+    else if(subFormulaRoot.rightParent)
+    {
+      subFormulaRoot.rightParent.right = ruleTree;
+    }
+    else {
+      this.root = ruleTree;
+    }
+    ParserUtil.attachParentsToTree(this.root);
+
+    this.setNewFormula("1. Initial Formula",ParserUtil.infixNotation(this.root));
+  }
+
+  applyTransformationHelper(node,transformationMap)
+  {
+    if(!node)return;
+    if(!node.left && !node.right)
+    {
+      var transformedNode = ParserUtil.cloneTree(transformationMap[node.symbol]);
+      if(node.leftParent)
+        node.leftParent.left = transformedNode;
+      else if(node.rightParent)
+        node.rightParent.right = transformedNode;
+
+    }
+    else
+    {
+        this.applyTransformationHelper(node.left,transformationMap);
+        this.applyTransformationHelper(node.right,transformationMap);
     }
   }
 

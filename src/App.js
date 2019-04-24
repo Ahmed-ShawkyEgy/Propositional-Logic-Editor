@@ -23,7 +23,8 @@ class App extends Component {
         {label:"Ф<sub>0</sub>∨Ф<sub>1</sub>≡Ф<sub>1</sub>∨Ф<sub>0</sub>", value:"a∨b≡b∨a"},
         {label:"Ф<sub>0</sub>∧(Ф<sub>1</sub>∧Ф<sub>2</sub>)≡Ф<sub>0</sub>∧Ф<sub>1</sub>∧Ф<sub>2</sub>",value:"a∧(b∧c)≡a∧b∧c"},
         {label:"Ф<sub>0</sub>→Ф<sub>0</sub>≡Ф<sub>0</sub>", value:"a→a≡a"},
-        {label:"Ф<sub>0</sub>→(Ф<sub>1</sub>∧¬Ф<sub>1</sub>)≡Ф<sub>0</sub>", value:"a→(b∧¬b)≡a"}
+        {label:"Ф<sub>0</sub>→(Ф<sub>1</sub>∧¬Ф<sub>1</sub>)≡Ф<sub>0</sub>", value:"a→(b∧¬b)≡a"},
+        {label:"(Ф<sub>0</sub>)≡Ф<sub>0</sub>", value:"(a)≡a"}
       ],
     };
     return (

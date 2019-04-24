@@ -10,6 +10,17 @@ class ParserUtil{
     this.dfs(currentNode.right,fn,params);
   }
 
+  static attachParentsToTree(node)
+  {
+    if(!node || (!node.left && !node.right))return;
+
+
+    if(node.left)node.left.leftParent = node;
+    if(node.right)node.right.rightParent = node;
+    ParserUtil.attachParentsToTree(node.left);
+    ParserUtil.attachParentsToTree(node.right);
+  }
+
   static countLeaves(tree)
   {
     var params = {leavesCount:0};
@@ -45,9 +56,9 @@ class ParserUtil{
     var rightSubTree = curNode.right? this.infixNotation(curNode.right):"";
     if(curNode.symbol==="()")
     {
-      return "( " + leftSubTree + " " + rightSubTree + " )";
+      return "(" + leftSubTree +  rightSubTree + ")";
     }
-      return leftSubTree + " " + curNode.symbol + " " + rightSubTree;
+      return leftSubTree + "" + curNode.symbol + "" + rightSubTree;
   }
 
   static postfixNotation(curNode)
