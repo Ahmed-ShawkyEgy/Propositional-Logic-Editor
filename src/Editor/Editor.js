@@ -359,7 +359,7 @@ class Editor extends Component{
       )});
 
     return (
-      <Container fluid={true}>
+      <Container fluid={false}>
      <Row>
        <Col
          md="12"
