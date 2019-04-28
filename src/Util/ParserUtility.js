@@ -128,5 +128,37 @@ class ParserUtil{
     return atoms;
   }
 
+  static nodeIsLeaf(node)
+  {
+    return !node.left && !node.right;
+  }
+
+  static removeUselessBrackets(currentNode)
+  {
+    if(!currentNode)return;
+    if(currentNode.symbol==="()" && (currentNode.right.symbol==="()" || ParserUtil.nodeIsLeaf(currentNode.right) ) )
+    {
+      var child = currentNode.right;
+      if(currentNode.leftParent)
+      {
+        currentNode.leftParent.left = child;
+        child.leftParent = currentNode.leftParent;
+      }
+      else if(currentNode.rightParent)
+      {
+        currentNode.rightParent.right = child;
+        child.rightParent = currentNode.rightParent;
+      }
+
+      if(child.symbol==="()")
+        ParserUtil.removeUselessBrackets(child);
+    }
+    else
+    {
+        ParserUtil.removeUselessBrackets(currentNode.left);
+        ParserUtil.removeUselessBrackets(currentNode.right);
+    }
+  }
+
 }
 export default ParserUtil;

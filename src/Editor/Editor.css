@@ -100,7 +100,10 @@ margin-bottom: 20px;
   box-shadow: 0px 0px 0px #000000;
 }
 
-
+.step-header{
+  font-size: 1.2em;
+  font-weight: 550;
+}
 
 .step {
 /*   background-color: lightblue; */
@@ -169,5 +172,5 @@ margin-bottom: 20px;
   font-size: 1.3em;
   cursor: pointer;
   padding: 10px 2px;
-  font-weight: 500;
+  font-weight:400;
 }

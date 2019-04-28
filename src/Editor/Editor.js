@@ -18,8 +18,9 @@ class Editor extends Component{
     this.transformationIsValid = this.transformationIsValid.bind(this);
 
     this.state = {
-      currentFormulaHeader:"1. InitialFormula",
-      currentFormula:this.props.excercise.startingFormula,
+      history:[],
+
+      historyIndex:-1,
 
       // colors is used to define the highlighting color of the sub-formulas
       colors:new Array(props.excercise.startingFormula.length).fill(0),
@@ -46,7 +47,7 @@ class Editor extends Component{
     .then(text  => {
       // Create the parser
       this.parser = peg.generate(text);
-      this.setNewFormula(this.state.currentFormulaHeader,this.state.currentFormula)
+      this.setNewFormula("Initial Formula",this.props.excercise.startingFormula);
       this.parseTransformationRules();
     });
 
@@ -54,13 +55,29 @@ class Editor extends Component{
 
   setNewFormula(formulaHeader,formula)
   {
+    if(!formulaHeader)
+      formulaHeader = "Applied Transformation"
+    formulaHeader = this.state.historyIndex+2+". "+formulaHeader;
     var tree = this.parser.parse(formula);
+    while(tree.symbol==="()")
+      tree = tree.right;
     ParserUtil.attachParentsToTree(tree);
+    ParserUtil.removeUselessBrackets(tree);
+    formula = ParserUtil.infixNotation(tree);
     this.buildMap(tree,formula);
     this.root = tree;
+
+    var history = this.state.history.slice(0,this.state.historyIndex+1);
+    history.push(
+      {
+        currentFormulaHeader:formulaHeader,
+        currentFormula:formula
+      });
+
     this.setState({
-      currentFormulaHeader:formulaHeader,
-      currentFormula:formula,
+      history:history,
+
+      historyIndex:this.state.historyIndex+1,
 
       // colors is used to define the highlighting color of the sub-formulas
       colors:new Array(formula.length).fill(this.statics.DESELECT_COLOR),
@@ -309,7 +326,7 @@ class Editor extends Component{
     }
     ParserUtil.attachParentsToTree(this.root);
 
-    this.setNewFormula("1. Initial Formula",ParserUtil.infixNotation(this.root));
+    this.setNewFormula(this.transformationRules[ruleIndex].comment,ParserUtil.infixNotation(this.root));
   }
 
   applyTransformationHelper(node,transformationMap)
@@ -333,21 +350,47 @@ class Editor extends Component{
 
   render()
   {
-      var currentFormula = this.state.currentFormula.split("").map((atom,index)=>{
-        var color = this.state.colors[index];
+    var history = this.state.history;
+    var historyIndex = this.state.historyIndex;
+    var previousFormulas = [];
+    var currentFormula = "";
+    for(var i = 0; i < historyIndex && i<history.length;i++)
+    {
+      previousFormulas.push(
+        <Formula
+          header={history[i].currentFormulaHeader}
+          body={history[i].currentFormula.split("").map((atom,index)=>{
+            return(
+              <span
+                key={index}
+                className="atom"
+                >
+                {atom}
+              </span>
+            )})}
+        />
+      );
+    }
+    console.log(history);
 
-        return(
-        <span
-          key={index}
-          onMouseOver={()=>this.onSubFormulaMouseOver(index)}
-          onMouseOut={()=>this.onSubFormulaMouseOut(index)}
-          onClick={()=>this.onSubFormulaClick(index)}
-          style={{backgroundColor:color}}
-          className="atom"
-          >
-          {atom}
-          </span>
-      )});
+      if(history.length>0)
+      {
+        currentFormula = history[historyIndex].currentFormula.split("").map((atom,index)=>{
+          var color = this.state.colors[index];
+
+          return(
+            <span
+              key={index}
+              onMouseOver={()=>this.onSubFormulaMouseOver(index)}
+              onMouseOut={()=>this.onSubFormulaMouseOut(index)}
+              onClick={()=>this.onSubFormulaClick(index)}
+              style={{backgroundColor:color}}
+              className="atom"
+              >
+              {atom}
+            </span>
+          )});
+      }
 
       var transformationRules = this.transformationRules.map((rule,index)=>{return (
         <button
@@ -390,9 +433,9 @@ class Editor extends Component{
                   className="settings"
                   >
 
-                 <button className="btn btn-xs setting"><i className="fa fa-home"></i></button>
-                 <button className="btn btn-xs setting"><i className="fa fa-bars"></i></button>
-                 <button className="btn btn-xs setting"><i className="fa fa-trash"></i></button>
+                  <button className="btn btn-xs setting"><i className="fa fa-undo"></i></button>
+                  <button className="btn btn-xs setting"><i className="fa fa-repeat"></i></button>
+                  <button className="btn btn-xs setting"><i className="fa fa-trash"></i></button>
 
                </Col>
              </Row>
@@ -409,8 +452,10 @@ class Editor extends Component{
                    <Row>
                      <Col lg="12" className="main-panel">
 
+                    {previousFormulas}
+
                      <Formula
-                       header={this.state.currentFormulaHeader}
+                       header={historyIndex!==-1?history[historyIndex].currentFormulaHeader:""}
                        body={currentFormula}
                        subFormulas={this.state.subFormulas}
                        onSubFormulaHover={this.onSubFormulaMouseOver}

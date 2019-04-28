@@ -52,12 +52,14 @@ class Formula extends Component{
 
     return (
       <div className="step">
-        <a onClick={() => {this.toggle();}} href="#">{this.props.header}</a>
+        <a onClick={(e) => {e.preventDefault(); this.toggle();}} href="#" className="step-header">{this.props.header}</a>
         <Collapse isOpen={this.state.collapse}>
         <Card className="step-body">
           <CardBody>
-          {this.props.body}
-          <hr/>
+          <div>
+              {this.props.body}
+          </div>
+          {subFormulas.length>0?<hr/>:""}
           {subFormulas}
       </CardBody>
         </Card>
