@@ -16,6 +16,15 @@ class Editor extends Component{
     this.onSubFormulaRemove = this.onSubFormulaRemove.bind(this);
     this.onRuleClick = this.onRuleClick.bind(this);
     this.transformationIsValid = this.transformationIsValid.bind(this);
+    this.undo = this.undo.bind(this);
+    this.redo = this.redo.bind(this);
+    this.reset = this.reset.bind(this);
+
+    this.statics = {
+      HIGHLIGHT_COLOR:"rgb(255,212,128)",
+      SELECT_COLOR:"rgb(170, 240,190)",
+      DESELECT_COLOR:"rgb(255,255,255)"
+    }
 
     this.state = {
       history:[],
@@ -23,19 +32,13 @@ class Editor extends Component{
       historyIndex:-1,
 
       // colors is used to define the highlighting color of the sub-formulas
-      colors:new Array(props.excercise.startingFormula.length).fill(0),
+      colors:new Array(props.excercise.startingFormula.length).fill(this.statics.DESELECT_COLOR),
 
       // mapArray is used to map each atom in the formula to the corresponding node in the parsing tree
       mapArray: new Array(props.excercise.startingFormula.length).fill(null),
 
       subFormulas: [],
     };
-
-    this.statics = {
-      HIGHLIGHT_COLOR:"rgb(255,212,128)",
-      SELECT_COLOR:"rgb(170, 240,190)",
-      DESELECT_COLOR:"rgb(255,255,255)"
-    }
 
     this.transformationRules = this.props.excercise.transformationRules.slice();
     this.transformationRulesTrees = [];
@@ -64,7 +67,7 @@ class Editor extends Component{
     ParserUtil.attachParentsToTree(tree);
     ParserUtil.removeUselessBrackets(tree);
     formula = ParserUtil.infixNotation(tree);
-    this.buildMap(tree,formula);
+    var mapArray = this.buildMap(tree,formula);
     this.root = tree;
 
     var history = this.state.history.slice(0,this.state.historyIndex+1);
@@ -81,6 +84,8 @@ class Editor extends Component{
 
       // colors is used to define the highlighting color of the sub-formulas
       colors:new Array(formula.length).fill(this.statics.DESELECT_COLOR),
+
+      mapArray:mapArray,
 
       subFormulas: [],
     });
@@ -100,7 +105,8 @@ class Editor extends Component{
 
     // Map the nodes of the tree to the mapArray
     this.buildMapDfs(tree,mapArray,0,compressedFormula);
-    this.setState({mapArray:mapArray});
+    // this.setState({mapArray:mapArray});
+    return mapArray;
   }
 
   buildMapDfs(currentNode,mapArray,currentIndex,compressedFormula)
@@ -348,13 +354,65 @@ class Editor extends Component{
     }
   }
 
+  undo()
+  {
+    var index = this.state.historyIndex;
+    var history = this.state.history;
+    if(index > 0)
+    {
+      var currentFormula = history[index-1].currentFormula;
+      this.root = this.parser.parse(currentFormula);
+      ParserUtil.attachParentsToTree(this.root);
+      var newMapArray = this.buildMap(this.root,currentFormula);
+      this.setState({
+        historyIndex:index - 1,
+        colors:new Array(history[index-1].currentFormula.length).fill(this.statics.DESELECT_COLOR),
+        mapArray: newMapArray,
+      });
+    }
+  }
+
+  redo()
+  {
+    var index = this.state.historyIndex;
+    var history = this.state.history;
+    if(index + 1 < history.length)
+    {
+      var currentFormula = history[index + 1].currentFormula;
+      this.root = this.parser.parse(currentFormula);
+      ParserUtil.attachParentsToTree(this.root);
+      var newMapArray = this.buildMap(this.root,currentFormula);
+      this.setState({
+        historyIndex:index + 1,
+        colors:new Array(history[index + 1].currentFormula.length).fill(this.statics.DESELECT_COLOR),
+        mapArray: newMapArray,
+      });
+    }
+  }
+
+  reset()
+  {
+    var index = 0;
+    var history = [this.state.history[0]];
+    var currentFormula = history[index].currentFormula;
+    this.root = this.parser.parse(currentFormula);
+    ParserUtil.attachParentsToTree(this.root);
+    var newMapArray = this.buildMap(this.root,currentFormula);
+    this.setState({
+      history:history,
+      historyIndex:index,
+      colors:new Array(history[index].currentFormula.length).fill(this.statics.DESELECT_COLOR),
+      mapArray: newMapArray,
+    });
+  }
+
   render()
   {
     var history = this.state.history;
     var historyIndex = this.state.historyIndex;
     var previousFormulas = [];
     var currentFormula = "";
-    for(var i = 0; i < historyIndex && i<history.length;i++)
+    for(var i = 0; i < historyIndex ;i++)
     {
       previousFormulas.push(
         <Formula
@@ -371,7 +429,6 @@ class Editor extends Component{
         />
       );
     }
-    console.log(history);
 
       if(history.length>0)
       {
@@ -433,9 +490,9 @@ class Editor extends Component{
                   className="settings"
                   >
 
-                  <button className="btn btn-xs setting"><i className="fa fa-undo"></i></button>
-                  <button className="btn btn-xs setting"><i className="fa fa-repeat"></i></button>
-                  <button className="btn btn-xs setting"><i className="fa fa-trash"></i></button>
+                  <button className="btn btn-xs setting shadow-none" onClick={this.undo}><i className="fa fa-undo"></i></button>
+                  <button className="btn btn-xs setting shadow-none" onClick={this.redo}><i className="fa fa-repeat"></i></button>
+                  <button className="btn btn-xs setting shadow-none" onClick={this.reset}><i className="fa fa-trash"></i></button>
 
                </Col>
              </Row>
