@@ -90,7 +90,6 @@ class Editor extends Component{
       subFormulas: [],
     });
     this.deSelect(this.root,this.state.subFormulas);
-    console.log(this.root);
   }
 
 
@@ -279,7 +278,7 @@ class Editor extends Component{
       transformationMap[transformationAtoms[i]] = null;
     if(this.checkTransformationMatchingHelper(formulaNode,transformationTree,transformationMap))
     {
-      console.log(transformationMap);
+      // console.log(transformationMap);
       return {subFormulaRoot:formulaNode,transformationMap:transformationMap};
     }
     return this.checkTransformationMatching(formulaNode.left,transformationTree,transformationAtoms)
@@ -458,6 +457,26 @@ class Editor extends Component{
           dangerouslySetInnerHTML={{__html:rule.label}}></button>
       )});
 
+
+    var targetFormula = !this.props.excercise.showToUser? "":(
+      <div>
+          <Row>
+          <Col lg={{size:6,offset:3}}>
+            <h2 id="target-formula-header">
+              Target Formula
+            </h2>
+          </Col>
+        </Row>
+        <Row>
+        <Col lg={{size:6,offset:3}}>
+          <h2 id="target-formula">
+            {this.props.excercise.targetFormula}
+          </h2>
+        </Col>
+      </Row>
+    </div>
+    );
+
     return (
       <Container fluid={false}>
      <Row>
@@ -465,6 +484,19 @@ class Editor extends Component{
          md="12"
          lg="12"
          className="main-body">
+
+         <Row>
+           <Col lg={{size:10,offset:1}}>
+           <h1>
+             Problem Statement
+           </h1>
+           <article id="problem-statement">
+             {this.props.excercise.problemStatement}
+           </article>
+           </Col>
+         </Row>
+
+         {targetFormula}
 
          <Row>
            <Col lg={{size:10,offset:1}}

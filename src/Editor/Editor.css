@@ -10,6 +10,29 @@ body{
 /*     border: 2px solid blue; */
 margin-bottom: 20px;
 }
+
+#problem-statement{
+  font-size: 1.3em;
+  margin-bottom:30px;
+  margin-top: 30px;
+}
+
+#target-formula-header{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#target-formula{
+  text-align: center;
+  font-weight: bold;
+  font-style: oblique;
+  letter-spacing: 5px;
+  border-radius: 30px;
+  background-color: #d2d2e0;
+  padding: 10px;
+}
+
 .main-body {
   background-color: #f0f0f5;
   box-shadow: 0px 5px 100px #888888;
