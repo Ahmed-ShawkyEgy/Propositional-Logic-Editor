@@ -412,6 +412,7 @@ class Editor extends Component{
       historyIndex:index,
       colors:new Array(history[index].currentFormula.length).fill(this.statics.DESELECT_COLOR),
       mapArray: newMapArray,
+      subFormulas:[],
     });
   }
 
