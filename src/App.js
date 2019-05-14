@@ -16,7 +16,7 @@ class App extends Component {
       problemStatement:"Your task in this excercise is to use the transformation rules on the right and apply them on the given formula to reach at the end a formula that is in valid conjiunctive normal form",
       startingFormula:"(d→b)∧(b→(d∧u))∧¬((b∧d)∧u)∧d",
       // startingFormula:"((((((d→b))))))",
-      targetFormula:"¬a∨b",
+      targetFormula:"(¬d∨b)∧(¬b∨d)∧(¬b∨u)∧(¬b∨¬d∨¬u)∧d",
       showToUser:true,
       transformationRules:[
         {label:"¬¬Ф<sub>0</sub>≡Ф<sub>0</sub>", value:"¬¬a≡a", comment:"Double Negation Resolved"},

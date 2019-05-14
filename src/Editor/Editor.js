@@ -131,6 +131,16 @@ class Editor extends Component{
       currentNode.index.push(compressedFormula[currentIndex++].index);
       return currentIndex;
     }
+    else if(currentNode.rightParent && currentNode.rightParent.symbol==="()")
+    {
+      currentIndex = this.buildMapDfs(currentNode.left,mapArray,currentIndex,compressedFormula);
+
+      var parent = currentNode.rightParent;
+      currentNode.index = compressedFormula[currentIndex].index;
+      mapArray[compressedFormula[currentIndex++].index] = parent;
+
+      return this.buildMapDfs(currentNode.right,mapArray,currentIndex,compressedFormula);
+    }
     else{
       currentIndex = this.buildMapDfs(currentNode.left,mapArray,currentIndex,compressedFormula);
 

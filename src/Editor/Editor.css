@@ -17,13 +17,9 @@ margin-bottom: 20px;
   margin-top: 30px;
 }
 
-#target-formula-header{
-  text-align: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
 
 #target-formula{
+  font-size: 1.7em;
   text-align: center;
   font-weight: bold;
   font-style: oblique;
@@ -31,6 +27,13 @@ margin-bottom: 20px;
   border-radius: 30px;
   background-color: #d2d2e0;
   padding: 10px;
+  word-wrap: break-word;
+}
+
+#target-formula-header{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .main-body {
