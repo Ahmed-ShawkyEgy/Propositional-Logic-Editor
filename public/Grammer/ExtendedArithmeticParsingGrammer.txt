@@ -1,0 +1,56 @@
+{
+  function buildBinaryTree(left,right)
+  { 
+	if(!right || right.length == 0) return left;
+  	var root = {symbol:right[0][1]};
+    root.right = right[0][3];
+    root.left = left;
+    for(var i = 1; i <right.length;i++)
+    {
+    	var symbol = right[i][1];
+        var leftSubTree = root;
+        root = {symbol:symbol};
+        root.left = leftSubTree;
+        root.right = right[i][3];
+    }
+    return root;
+  }
+  
+  function buildUnaryTree(symbol,count,operand)
+  {
+      var root = operand;
+      for(var i = 0; i < count;i++)
+      {
+          var subTree = root;
+          root = {symbol:symbol};
+          root.right = subTree;
+      }
+      return root;
+  }
+}
+
+root = _ x:Additive _ {return x}
+/ _ {return null}
+
+Additive
+  = head:Multiplicative tail:(_ ("+") _ Multiplicative)* {return buildBinaryTree(head,tail);}
+    /head:Multiplicative tail:(_ ("-") _ Multiplicative)* {return buildBinaryTree(head,tail);}
+    
+Multiplicative
+  = head:Factor tail:(_ ("*") _ Factor)* {return buildBinaryTree(head,tail);}
+	/head:Factor tail:(_ ("/") _ Factor)* {return buildBinaryTree(head,tail);}
+
+Factor
+  = 
+  negations:(_ '~' _)* "(" _ expr:Additive _ ")" {
+  var operand = {symbol:"()"};
+  operand.right = expr;
+  return buildUnaryTree('~',negations.length,operand);
+  }
+/ negations:(_ '~' _)* operand:Operand {return buildUnaryTree('~',negations.length,operand);}
+
+Operand
+  = _ atom:([a-z] [a-zA-Z0-9]*) { return {symbol:atom[0] + atom[1].join("")}; }
+
+_ "whitespace"
+  = [ \t\n\r]*
