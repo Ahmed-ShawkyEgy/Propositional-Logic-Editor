@@ -470,7 +470,7 @@ class Editor extends Component{
 
 
     var targetFormula = !this.props.excercise.showToUser? "":(
-      <div>
+      <div className="sticky-top">
           <Row>
           <Col lg={{size:6,offset:3}}>
             <h2 id="target-formula-header">
@@ -478,9 +478,9 @@ class Editor extends Component{
             </h2>
           </Col>
         </Row>
-        <Row>
-        <Col lg={{size:6,offset:3}}>
-          <h2 id="target-formula">
+        <Row >
+        <Col lg={{size:6,offset:3}}  id="target-formula">
+          <h2>
             {this.props.excercise.targetFormula}
           </h2>
         </Col>

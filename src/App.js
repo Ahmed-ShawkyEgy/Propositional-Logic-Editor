@@ -27,25 +27,25 @@ class App extends Component {
         {label:"¬(Ф<sub>0</sub>∧Ф<sub>1</sub>)≡¬Ф<sub>0</sub>∨¬Ф<sub>1</sub>",value:"¬(a∧b)≡(¬(a)∨¬(b))", comment:"Negation Distributed"},
         {label:"¬(Ф<sub>0</sub>∨Ф<sub>1</sub>)≡¬Ф<sub>0</sub>∧¬Ф<sub>1</sub>",value:"¬(a∨b)≡(¬(a)∧¬(b))",comment:"Negation Distributed"},
 
-        {label:"⊥∧Ф<sub>0</sub>≡⊥",value:"⊥∧a≡⊥"},
-        {label:"Ф<sub>0</sub>∧⊥≡⊥",value:"a∧⊥≡⊥"},
-        {label:"⊥∨Ф<sub>0</sub>≡Ф<sub>0</sub>",value:"⊥∨a≡a"},
-        {label:"Ф<sub>0</sub>∨⊥≡Ф<sub>0</sub>",value:"a∨⊥≡a"},
-
-        {label:"⊤∧Ф<sub>0</sub>≡Ф<sub>0</sub>",value:"⊤∧a≡a"},
-        {label:"Ф<sub>0</sub>∧⊤≡Ф<sub>0</sub>",value:"a∧⊤≡a"},
-        {label:"⊤∨Ф<sub>0</sub>≡⊤",value:"⊤∨a≡⊤"},
-        {label:"Ф<sub>0</sub>∨⊤≡⊤",value:"a∨⊤≡⊤"},
-
-        {label:"¬⊥≡⊤",value:"¬⊥≡⊤"},
-        {label:"¬⊤≡⊥",value:"¬⊤≡⊥"},
+        // {label:"⊥∧Ф<sub>0</sub>≡⊥",value:"⊥∧a≡⊥"},
+        // {label:"Ф<sub>0</sub>∧⊥≡⊥",value:"a∧⊥≡⊥"},
+        // {label:"⊥∨Ф<sub>0</sub>≡Ф<sub>0</sub>",value:"⊥∨a≡a"},
+        // {label:"Ф<sub>0</sub>∨⊥≡Ф<sub>0</sub>",value:"a∨⊥≡a"},
+        //
+        // {label:"⊤∧Ф<sub>0</sub>≡Ф<sub>0</sub>",value:"⊤∧a≡a"},
+        // {label:"Ф<sub>0</sub>∧⊤≡Ф<sub>0</sub>",value:"a∧⊤≡a"},
+        // {label:"⊤∨Ф<sub>0</sub>≡⊤",value:"⊤∨a≡⊤"},
+        // {label:"Ф<sub>0</sub>∨⊤≡⊤",value:"a∨⊤≡⊤"},
+        //
+        // {label:"¬⊥≡⊤",value:"¬⊥≡⊤"},
+        // {label:"¬⊤≡⊥",value:"¬⊤≡⊥"},
 
         {label:"Ф<sub>0</sub>∨Ф<sub>1</sub>≡Ф<sub>1</sub>∨Ф<sub>0</sub>", value:"a∨b≡b∨a"},
         {label:"Ф<sub>0</sub>∧(Ф<sub>1</sub>∧Ф<sub>2</sub>)≡Ф<sub>0</sub>∧Ф<sub>1</sub>∧Ф<sub>2</sub>",value:"a∧(b∧c)≡a∧b∧c"},
         {label:"(Ф<sub>0</sub>∧Ф<sub>1</sub>)∧Ф<sub>2</sub>≡Ф<sub>0</sub>∧Ф<sub>1</sub>∧Ф<sub>2</sub>",value:"(b∧c)∧a≡b∧c∧a"},
         {label:"Ф<sub>0</sub>∨(Ф<sub>1</sub>∨Ф<sub>2</sub>)≡Ф<sub>0</sub>∨Ф<sub>1</sub>∨Ф<sub>2</sub>",value:"a∨(b∨c)≡a∨b∨c"},
         {label:"(Ф<sub>0</sub>∨Ф<sub>1</sub>)∨Ф<sub>2</sub>≡Ф<sub>0</sub>∨Ф<sub>1</sub>∨Ф<sub>2</sub>",value:"(a∨b)∨c≡a∨b∨c"},
-        {label:"(Ф<sub>0</sub>)≡Ф<sub>0</sub>", value:"(a)≡a"},
+        // {label:"(Ф<sub>0</sub>)≡Ф<sub>0</sub>", value:"(a)≡a"},
       ],
     };
     return (
