@@ -160,5 +160,18 @@ class ParserUtil{
     }
   }
 
+  static isCNF(node,inDisjunction)
+  {
+    if(!node)
+      return true;
+    if(node.symbol==='→' || node.symbol==='↔' || (inDisjunction && node.symbol==='∧'))
+      return false;
+    if(ParserUtil.nodeIsLeaf(node))
+      return true;
+    if(node.symbol==='∨')
+      inDisjunction = true;
+    return ParserUtil.isCNF(node.left,inDisjunction) && ParserUtil.isCNF(node.right,inDisjunction);
+  }
+
 }
 export default ParserUtil;

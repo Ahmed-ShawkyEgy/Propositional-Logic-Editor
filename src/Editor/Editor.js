@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import peg from "pegjs";
-import { Container, Row, Col, } from 'reactstrap';
+import { Container, Row, Col,Button, } from 'reactstrap';
 import './Editor.css';
 import 'font-awesome/css/font-awesome.min.css';
 import Formula from './Formula';
@@ -19,6 +19,7 @@ class Editor extends Component{
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.reset = this.reset.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
 
     this.statics = {
       HIGHLIGHT_COLOR:"rgb(255,212,128)",
@@ -416,6 +417,17 @@ class Editor extends Component{
     });
   }
 
+  onSubmit()
+  {
+    if(ParserUtil.isCNF(this.root))
+    {
+      console.log("Is CNF !!");
+    }
+    else{
+      console.log("Not CNF :*(");
+    }
+  }
+
   render()
   {
     var history = this.state.history;
@@ -587,6 +599,12 @@ class Editor extends Component{
                  </div>
                </Col>
 
+             </Row>
+
+             <Row className="margin">
+               <Col lg="12">
+               <button id="submit" className="btn btn-primary" onClick={this.onSubmit}>Submit</button>
+               </Col>
              </Row>
 
            </Col>
