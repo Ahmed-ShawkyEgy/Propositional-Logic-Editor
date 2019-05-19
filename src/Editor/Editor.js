@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import peg from "pegjs";
-import { Container, Row, Col,Button, } from 'reactstrap';
+import { Container, Row, Col, } from 'reactstrap';
 import './Editor.css';
 import 'font-awesome/css/font-awesome.min.css';
 import Formula from './Formula';
@@ -262,11 +262,11 @@ class Editor extends Component{
     var transformationStatus = this.transformationIsValid(ruleIndex);
     if(transformationStatus)
     {
-      console.log("Valid !!!");
+      // console.log("Valid !!!");
       this.applyTransformation(ruleIndex,transformationStatus.subFormulaRoot,transformationStatus.transformationMap);
       return;
     }
-    console.log("transformation is Invalid");
+    // console.log("transformation is Invalid");
   }
 
   transformationIsValid(ruleIndex)
@@ -421,11 +421,9 @@ class Editor extends Component{
   {
     if(ParserUtil.isCNF(this.root))
     {
-      console.log("Is CNF !!");
       alert("Correct !!")
     }
     else{
-      console.log("Not CNF :*(");
       alert("Not Correct")
     }
   }
@@ -440,6 +438,7 @@ class Editor extends Component{
     {
       previousFormulas.push(
         <Formula
+          key={i}
           header={history[i].currentFormulaHeader}
           body={history[i].currentFormula.split("").map((atom,index)=>{
             return(
