@@ -24,7 +24,7 @@ class Formula extends Component{
       subFormulas = this.props.subFormulas.slice().map((tree,idx)=>{
         var treeIndex = Array.isArray(tree.index)?tree.index[0]:tree.index;
         return(
-          <Row>
+          <Row key={idx}>
             <Col lg="11">
            <div
 
@@ -48,7 +48,6 @@ class Formula extends Component{
           </Col>
         </Row>
         )}) ;
-
 
     return (
       <div className="step">

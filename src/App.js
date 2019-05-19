@@ -14,9 +14,7 @@ class App extends Component {
 
     let Excercise = {
       problemStatement:"Your task in this excercise is to use the transformation rules on the right and apply them on the given formula to reach at the end a formula that is in valid conjiunctive normal form",
-      // startingFormula:"(d→b)∧(b→(d∧u))∧¬((b∧d)∧u)∧d",
-      startingFormula:"(¬d∨b)∧(¬b∨d)∧(¬b∨u)∧(¬b∨¬d∨¬u)∧d",
-      // startingFormula:"((((((d→b))))))",
+      startingFormula:"(d→b)∧(b→(d∧u))∧¬((b∧d)∧u)∧d",
       targetFormula:"(¬d∨b)∧(¬b∨d)∧(¬b∨u)∧(¬b∨¬d∨¬u)∧d",
       showToUser:true,
       transformationRules:[

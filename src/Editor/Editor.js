@@ -422,9 +422,11 @@ class Editor extends Component{
     if(ParserUtil.isCNF(this.root))
     {
       console.log("Is CNF !!");
+      alert("Correct !!")
     }
     else{
       console.log("Not CNF :*(");
+      alert("Not Correct")
     }
   }
 
