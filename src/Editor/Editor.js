@@ -23,8 +23,13 @@ class Editor extends Component{
 
     this.statics = {
       HIGHLIGHT_COLOR:"rgb(255,212,128)",
-      SELECT_COLOR:"rgb(170, 240,190)",
-      DESELECT_COLOR:"rgb(255,255,255)"
+      DESELECT_COLOR:"rgb(255,255,255)",
+      SELECT_COLOR:[
+        "rgb(245, 206, 220)",
+        "rgb(201, 199, 230)",
+        "rgb(228, 247, 208)",
+        "rgb(255, 246, 215)",
+      ],
     }
 
     this.state = {
@@ -237,6 +242,7 @@ class Editor extends Component{
     ParserUtil.dfs(
         this.state.mapArray[index],
         (node,params)=>{
+          var subFormulaIndex = (node.subFormulaIndex-1) % this.statics.SELECT_COLOR.length;
           if(node.symbol==="()")
           {
             params.colors[node.index[0]] = this.statics.DESELECT_COLOR;
@@ -244,14 +250,14 @@ class Editor extends Component{
 
             if(node.isSelected)
             {
-              params.colors[node.index[0]] = this.statics.SELECT_COLOR;
-              params.colors[node.index[1]] = this.statics.SELECT_COLOR;
+              params.colors[node.index[0]] = this.statics.SELECT_COLOR[subFormulaIndex];
+              params.colors[node.index[1]] = this.statics.SELECT_COLOR[subFormulaIndex];
             }
           }
           params.colors[node.index] = this.statics.DESELECT_COLOR;
           if(node.isSelected)
           {
-            params.colors[node.index] = this.statics.SELECT_COLOR;
+            params.colors[node.index] = this.statics.SELECT_COLOR[subFormulaIndex];
           }
         },
         {colors:colors});
