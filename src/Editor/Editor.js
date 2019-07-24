@@ -44,6 +44,8 @@ class Editor extends Component{
       mapArray: new Array(props.excercise.startingFormula.length).fill(null),
 
       subFormulas: [],
+
+      status:"All good!",
     };
 
     this.transformationRules = this.props.excercise.transformationRules.slice();
@@ -208,7 +210,10 @@ class Editor extends Component{
       var subFormulas = this.state.subFormulas.slice();
       this.deSelect(root,subFormulas);
       this.select(root,subFormulas);
-      this.setState({subFormulas:subFormulas})
+      this.setState({
+        subFormulas:subFormulas,
+        status:"Subformula { "+ ParserUtil.infixNotation(root)+" } has been selected successfully"
+      })
     }
   }
 
@@ -216,7 +221,10 @@ class Editor extends Component{
   {
     var subFormulas = this.state.subFormulas.slice();
     this.deSelect(root,subFormulas);
-    this.setState({subFormulas:subFormulas})
+    this.setState({
+      subFormulas:subFormulas,
+      status:"Subformula { "+ ParserUtil.infixNotation(root)+" } has been deselected successfully"
+    })
     this.onSubFormulaMouseOut(Array.isArray(root.index)?root.index[0]:root.index);
   }
 
@@ -269,8 +277,20 @@ class Editor extends Component{
     if(transformationStatus)
     {
       // console.log("Valid !!!");
+      this.setState(
+        {
+          status:"Transformation applied successfully!"
+        }
+      )
       this.applyTransformation(ruleIndex,transformationStatus.subFormulaRoot,transformationStatus.transformationMap);
       return;
+    }
+    else {
+      this.setState(
+        {
+          status:"This transformation rule is not applicable with the currently selected subFormulas"
+        }
+      )
     }
     // console.log("transformation is Invalid");
   }
@@ -384,6 +404,7 @@ class Editor extends Component{
         historyIndex:index - 1,
         colors:new Array(history[index-1].currentFormula.length).fill(this.statics.DESELECT_COLOR),
         mapArray: newMapArray,
+        status:"Undo"
       });
     }
   }
@@ -402,6 +423,7 @@ class Editor extends Component{
         historyIndex:index + 1,
         colors:new Array(history[index + 1].currentFormula.length).fill(this.statics.DESELECT_COLOR),
         mapArray: newMapArray,
+        status:"Redo"
       });
     }
   }
@@ -420,6 +442,7 @@ class Editor extends Component{
       colors:new Array(history[index].currentFormula.length).fill(this.statics.DESELECT_COLOR),
       mapArray: newMapArray,
       subFormulas:[],
+      status:"Reset"
     });
   }
 
@@ -537,7 +560,7 @@ class Editor extends Component{
          <Row>
            <Col  lg={{size:10,offset:1}}
              className="feedback-bar margin">
-             Status: All good!
+             Status: {this.state.status}
            </Col>
          </Row>
 
