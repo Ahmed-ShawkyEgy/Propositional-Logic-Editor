@@ -17,6 +17,12 @@ class App extends Component {
       startingFormula:"(d→b)∧(b→(d∧u))∧¬((b∧d)∧u)∧d",
       targetFormula:"(¬d∨b)∧(¬b∨d)∧(¬b∨u)∧(¬b∨¬d∨¬u)∧d",
       showToUser:true,
+      hints:[
+        "Try to remove all of the implications first",
+        "The answer doesn't have to match exactly the target formula, it should however be in CNF",
+        "Extra brackets don't affect the solution",
+        "Always distribute the negative sign",
+      ],
       transformationRules:[
         {label:"¬¬Ф<sub>0</sub>≡Ф<sub>0</sub>", value:"¬¬a≡a", comment:"Double Negation Resolved"},
         {label:"Ф<sub>0</sub>→Ф<sub>1</sub>≡¬Ф<sub>0</sub>∨Ф<sub>1</sub>" , value:"a→b≡¬(a)∨(b)",comment:"Implication Resolved"},

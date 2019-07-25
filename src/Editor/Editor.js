@@ -16,6 +16,9 @@ class Editor extends Component{
     this.onSubFormulaRemove = this.onSubFormulaRemove.bind(this);
     this.onRuleClick = this.onRuleClick.bind(this);
     this.transformationIsValid = this.transformationIsValid.bind(this);
+    this.nextHint = this.nextHint.bind(this);
+    this.previousHint = this.previousHint.bind(this);
+    this.toggleHint = this.toggleHint.bind(this);
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.reset = this.reset.bind(this);
@@ -45,7 +48,10 @@ class Editor extends Component{
 
       subFormulas: [],
 
+      hintIndex:0,
+
       status:"All good!",
+
     };
 
     this.transformationRules = this.props.excercise.transformationRules.slice();
@@ -390,6 +396,25 @@ class Editor extends Component{
     }
   }
 
+  nextHint()
+  {
+    this.toggleHint(1);
+  }
+
+  previousHint()
+  {
+    this.toggleHint(-1);
+  }
+
+  toggleHint(value)
+  {
+    var hintIndex = this.state.hintIndex + value;
+    if(hintIndex < 0)
+      hintIndex = this.props.excercise.hints.length-1;
+    hintIndex = hintIndex % this.props.excercise.hints.length;
+    this.setState({hintIndex:hintIndex});
+  }
+
   undo()
   {
     var index = this.state.historyIndex;
@@ -459,6 +484,7 @@ class Editor extends Component{
 
   render()
   {
+    var currentHint = this.props.excercise.hints[this.state.hintIndex];
     var history = this.state.history;
     var historyIndex = this.state.historyIndex;
     var previousFormulas = [];
@@ -554,7 +580,16 @@ class Editor extends Component{
          <Row>
            <Col lg={{size:10,offset:1}}
               className="hint-bar margin">
-             Hint: Try to remove all of the implications first
+
+              <Row>
+                <Col lg={{size:11}}>
+                  Hint: {currentHint}
+                </Col>
+                <Col lg={{size:1}}>
+                  <button className="btn btn-xs setting shadow-none" onClick={this.previousHint}><i class="fa fa-arrow-left"></i></button>
+                  <button className="btn btn-xs setting shadow-none" onClick={this.nextHint}><i class="fa fa-arrow-right"></i></button>
+                </Col>
+             </Row>
            </Col>
          </Row>
          <Row>
