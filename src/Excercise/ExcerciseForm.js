@@ -3,6 +3,7 @@ import FormulaEditor from './FormulaEditor';
 import DualListBox from 'react-dual-listbox';
 import {Button, Form, FormGroup, Label, Input,Container} from 'reactstrap';
 import peg from "pegjs";
+import SweetAlert from 'react-bootstrap-sweetalert';
 
 import 'react-duallist/lib/react_duallist.css'
 import 'react-dual-listbox/lib/react-dual-listbox.css';
@@ -20,6 +21,7 @@ class ExcerciseForm extends Component {
       targetFormula:"",
       showToUser:true,
       transformationRules:[],
+      popup:null,
     };
     this.parser = null;
     this.handleChange = this.handleChange.bind(this);
@@ -71,6 +73,15 @@ class ExcerciseForm extends Component {
       catch(err){
         console.log("Failed to parse Starting Formula");
         console.log(err.message);
+        this.setState({popup:(<SweetAlert
+          danger
+          title="Failed to parse the starting formula"
+          onConfirm={() => this.onPopupClose()}
+        >
+        {err.message}
+      </SweetAlert>
+      )});
+
         return;
       }
       try {
@@ -78,13 +89,36 @@ class ExcerciseForm extends Component {
       } catch (err) {
         console.log("Failed to parse Target Formula");
         console.log(err.message);
+
+        this.setState({popup:(<SweetAlert
+          danger
+          title="Failed to parse the target formula"
+          onConfirm={() => this.onPopupClose()}
+        >
+        {err.message}
+      </SweetAlert>
+      )});
+
         return;
       }
       console.log("All formulas have been successfully parsed");
       console.log(excercise);
+
+      this.setState({popup:(<SweetAlert
+        success
+        title="Excercise created successfully!"
+        onConfirm={() => this.onPopupClose()}
+      />)});
+
       return;
     }
     console.log("Parser not ready");
+  }
+
+
+  onPopupClose()
+  {
+    this.setState( {popup:null} );
   }
 
   render() {
@@ -92,6 +126,7 @@ class ExcerciseForm extends Component {
     const availableTransformations = this.props.transformations.slice();
     return (
       <Container>
+        {this.state.popup}
       <Form onSubmit={this.onSubmit}>
       <h1>Create New Excercise</h1>
 

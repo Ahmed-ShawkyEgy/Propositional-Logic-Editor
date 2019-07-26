@@ -4,7 +4,10 @@ import { Container, Row, Col, } from 'reactstrap';
 import './Editor.css';
 import 'font-awesome/css/font-awesome.min.css';
 import Formula from './Formula';
-import ParserUtil from '../Util/ParserUtility'
+import ParserUtil from '../Util/ParserUtility';
+import Popup from 'react-popup';
+import SweetAlert from 'react-bootstrap-sweetalert';
+
 
 class Editor extends Component{
 
@@ -51,6 +54,8 @@ class Editor extends Component{
       hintIndex:0,
 
       status:"All good!",
+
+      popup:null,
 
     };
 
@@ -473,13 +478,29 @@ class Editor extends Component{
 
   onSubmit()
   {
+    Popup.alert('Hello');
     if(ParserUtil.isCNF(this.root))
     {
-      alert("Correct !!")
+      // alert("Correct !!")
+      this.setState({popup:(<SweetAlert
+        success
+        title="Bravo!"
+        onConfirm={() => this.onPopupClose()}
+      />)});
     }
     else{
-      alert("Not Correct")
+      // alert("Not Correct")
+      this.setState({popup:(<SweetAlert
+        danger
+        title="The current formula is not in CNF"
+        onConfirm={() => this.onPopupClose()}
+      />)});
     }
+  }
+
+  onPopupClose()
+  {
+    this.setState( {popup:null} );
   }
 
   render()
@@ -555,9 +576,12 @@ class Editor extends Component{
       </Row>
     </div>
     );
-
+// -------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------
     return (
       <Container fluid={false}>
+        {this.state.popup}
      <Row>
        <Col
          md="12"
@@ -586,8 +610,8 @@ class Editor extends Component{
                   Hint: {currentHint}
                 </Col>
                 <Col lg={{size:1}}>
-                  <button className="btn btn-xs setting shadow-none" onClick={this.previousHint}><i class="fa fa-arrow-left"></i></button>
-                  <button className="btn btn-xs setting shadow-none" onClick={this.nextHint}><i class="fa fa-arrow-right"></i></button>
+                  <button className="btn btn-xs setting shadow-none" onClick={this.previousHint}><i className="fa fa-arrow-left"></i></button>
+                  <button className="btn btn-xs setting shadow-none" onClick={this.nextHint}>    <i className="fa fa-arrow-right"></i></button>
                 </Col>
              </Row>
            </Col>
