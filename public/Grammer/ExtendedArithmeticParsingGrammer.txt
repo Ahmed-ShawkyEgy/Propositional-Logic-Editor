@@ -33,12 +33,10 @@ root = _ x:Additive _ {return x}
 / _ {return null}
 
 Additive
-  = head:Multiplicative tail:(_ ("+") _ Multiplicative)* {return buildBinaryTree(head,tail);}
-    /head:Multiplicative tail:(_ ("-") _ Multiplicative)* {return buildBinaryTree(head,tail);}
+  = head:Multiplicative tail:(_ ("-"/"+") _ Multiplicative)* {return buildBinaryTree(head,tail);}
     
 Multiplicative
-  = head:Factor tail:(_ ("*") _ Factor)* {return buildBinaryTree(head,tail);}
-	/head:Factor tail:(_ ("/") _ Factor)* {return buildBinaryTree(head,tail);}
+  = head:Factor tail:(_ ("*"/"/") _ Factor)* {return buildBinaryTree(head,tail);}
 
 Factor
   = 

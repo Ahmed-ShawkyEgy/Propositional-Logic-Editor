@@ -60,7 +60,7 @@ class Editor extends Component{
   }
 
   componentDidMount() {
-    fetch('/Grammer/ExtendedLogicParsingGrammer.txt').then((r) => r.text())
+    fetch('/Grammer/ExtendedArithmeticParsingGrammer.txt').then((r) => r.text())
     .then(text  => {
       // Create the parser
       this.parser = peg.generate(text);
@@ -473,7 +473,8 @@ class Editor extends Component{
 
   onSubmit()
   {
-    if(ParserUtil.isCNF(this.root))
+    var targetFormulaRoot = this.parser.parse(this.props.excercise.targetFormula);
+    if(ParserUtil.compareTrees(this.root,targetFormulaRoot))
     {
       alert("Correct !!")
     }

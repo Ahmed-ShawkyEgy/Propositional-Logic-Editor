@@ -25,8 +25,8 @@ class App extends Component {
 
     let Excercise = {
       problemStatement:"Your task in this excercise is to use the transformation rules on the right and apply them on the given formula to reach at the end a formula that is in valid conjiunctive normal form",
-      startingFormula:"(d→b)∧(b→(d∧u))∧¬((b∧d)∧u)∧d",
-      targetFormula:"(¬d∨b)∧(¬b∨d)∧(¬b∨u)∧(¬b∨¬d∨¬u)∧d",
+      startingFormula:"a*(b+c)-(b/a)",
+      targetFormula:"a*(c+b)-(b/a)",
       showToUser:true,
       hints:[
         "Try to remove all of the implications first",
@@ -35,13 +35,16 @@ class App extends Component {
         "Always distribute the negative sign",
       ],
       transformationRules:[
-        {label:"¬¬Ф<sub>0</sub>≡Ф<sub>0</sub>", value:"¬¬a≡a", comment:"Double Negation Resolved"},
-        {label:"Ф<sub>0</sub>→Ф<sub>1</sub>≡¬Ф<sub>0</sub>∨Ф<sub>1</sub>" , value:"a→b≡¬(a)∨(b)",comment:"Implication Resolved"},
-        {label:"Ф<sub>0</sub>↔Ф<sub>1</sub>≡(¬Ф<sub>0</sub>∨Ф<sub>1</sub>)∧(¬Ф<sub>1</sub>∨Ф<sub>0</sub>)", value:"a↔b≡(¬(a)∨b)∧(¬(b)∨a)", comment:"Equivilance Resolved"},
-        {label:"Ф<sub>0</sub>∨(Ф<sub>1</sub>∧Ф<sub>2</sub>)≡(Ф<sub>0</sub>∨Ф<sub>1</sub>)∧(Ф<sub>0</sub>∨Ф<sub>2</sub>)", value:"a∨(b∧c)≡(a∨b)∧(a∨c)", comment:"Distributivity Applied"},
-        {label:"Ф<sub>0</sub>∧(Ф<sub>1</sub>∨Ф<sub>2</sub>)≡(Ф<sub>0</sub>∧Ф<sub>1</sub>)∨(Ф<sub>0</sub>∧Ф<sub>2</sub>)", value:"a∧(b∨c)≡(a∧b)∨(a∧c)", comment:"Distributivity Applied"},
-        {label:"¬(Ф<sub>0</sub>∧Ф<sub>1</sub>)≡¬Ф<sub>0</sub>∨¬Ф<sub>1</sub>",value:"¬(a∧b)≡(¬(a)∨¬(b))", comment:"Negation Distributed"},
-        {label:"¬(Ф<sub>0</sub>∨Ф<sub>1</sub>)≡¬Ф<sub>0</sub>∧¬Ф<sub>1</sub>",value:"¬(a∨b)≡(¬(a)∧¬(b))",comment:"Negation Distributed"},
+        {label:"Ф<sub>0</sub>+Ф<sub>1</sub>≡Ф<sub>1</sub>+Ф<sub>0</sub>", value:"a+b≡b+a", comment:"Associativity resolved"},
+        {label:"Ф<sub>0</sub>-Ф<sub>1</sub>≡Ф<sub>1</sub>-Ф<sub>0</sub>", value:"a-b≡b-a", comment:"Associativity resolved"},
+        {label:"Ф<sub>0</sub>*Ф<sub>1</sub>≡Ф<sub>1</sub>*Ф<sub>0</sub>", value:"a*b≡b*a", comment:"Associativity resolved"},
+        {label:"~~Ф<sub>0</sub>≡Ф<sub>0</sub>", value:"~~a≡a", comment:"Double negation resolved"},
+        // {label:"Ф<sub>0</sub>→Ф<sub>1</sub>≡¬Ф<sub>0</sub>∨Ф<sub>1</sub>" , value:"a→b≡¬(a)∨(b)",comment:"Implication Resolved"},
+        // {label:"Ф<sub>0</sub>↔Ф<sub>1</sub>≡(¬Ф<sub>0</sub>∨Ф<sub>1</sub>)∧(¬Ф<sub>1</sub>∨Ф<sub>0</sub>)", value:"a↔b≡(¬(a)∨b)∧(¬(b)∨a)", comment:"Equivilance Resolved"},
+        // {label:"Ф<sub>0</sub>∨(Ф<sub>1</sub>∧Ф<sub>2</sub>)≡(Ф<sub>0</sub>∨Ф<sub>1</sub>)∧(Ф<sub>0</sub>∨Ф<sub>2</sub>)", value:"a∨(b∧c)≡(a∨b)∧(a∨c)", comment:"Distributivity Applied"},
+        // {label:"Ф<sub>0</sub>∧(Ф<sub>1</sub>∨Ф<sub>2</sub>)≡(Ф<sub>0</sub>∧Ф<sub>1</sub>)∨(Ф<sub>0</sub>∧Ф<sub>2</sub>)", value:"a∧(b∨c)≡(a∧b)∨(a∧c)", comment:"Distributivity Applied"},
+        // {label:"¬(Ф<sub>0</sub>∧Ф<sub>1</sub>)≡¬Ф<sub>0</sub>∨¬Ф<sub>1</sub>",value:"¬(a∧b)≡(¬(a)∨¬(b))", comment:"Negation Distributed"},
+        // {label:"¬(Ф<sub>0</sub>∨Ф<sub>1</sub>)≡¬Ф<sub>0</sub>∧¬Ф<sub>1</sub>",value:"¬(a∨b)≡(¬(a)∧¬(b))",comment:"Negation Distributed"},
 
         // {label:"⊥∧Ф<sub>0</sub>≡⊥",value:"⊥∧a≡⊥"},
         // {label:"Ф<sub>0</sub>∧⊥≡⊥",value:"a∧⊥≡⊥"},
@@ -56,25 +59,28 @@ class App extends Component {
         // {label:"¬⊥≡⊤",value:"¬⊥≡⊤"},
         // {label:"¬⊤≡⊥",value:"¬⊤≡⊥"},
 
-        {label:"Ф<sub>0</sub>∨Ф<sub>1</sub>≡Ф<sub>1</sub>∨Ф<sub>0</sub>", value:"a∨b≡b∨a"},
-        {label:"Ф<sub>0</sub>∧(Ф<sub>1</sub>∧Ф<sub>2</sub>)≡Ф<sub>0</sub>∧Ф<sub>1</sub>∧Ф<sub>2</sub>",value:"a∧(b∧c)≡a∧b∧c"},
-        {label:"(Ф<sub>0</sub>∧Ф<sub>1</sub>)∧Ф<sub>2</sub>≡Ф<sub>0</sub>∧Ф<sub>1</sub>∧Ф<sub>2</sub>",value:"(b∧c)∧a≡b∧c∧a"},
-        {label:"Ф<sub>0</sub>∨(Ф<sub>1</sub>∨Ф<sub>2</sub>)≡Ф<sub>0</sub>∨Ф<sub>1</sub>∨Ф<sub>2</sub>",value:"a∨(b∨c)≡a∨b∨c"},
-        {label:"(Ф<sub>0</sub>∨Ф<sub>1</sub>)∨Ф<sub>2</sub>≡Ф<sub>0</sub>∨Ф<sub>1</sub>∨Ф<sub>2</sub>",value:"(a∨b)∨c≡a∨b∨c"},
+        // {label:"Ф<sub>0</sub>∨Ф<sub>1</sub>≡Ф<sub>1</sub>∨Ф<sub>0</sub>", value:"a∨b≡b∨a"},
+        // {label:"Ф<sub>0</sub>∧(Ф<sub>1</sub>∧Ф<sub>2</sub>)≡Ф<sub>0</sub>∧Ф<sub>1</sub>∧Ф<sub>2</sub>",value:"a∧(b∧c)≡a∧b∧c"},
+        // {label:"(Ф<sub>0</sub>∧Ф<sub>1</sub>)∧Ф<sub>2</sub>≡Ф<sub>0</sub>∧Ф<sub>1</sub>∧Ф<sub>2</sub>",value:"(b∧c)∧a≡b∧c∧a"},
+        // {label:"Ф<sub>0</sub>∨(Ф<sub>1</sub>∨Ф<sub>2</sub>)≡Ф<sub>0</sub>∨Ф<sub>1</sub>∨Ф<sub>2</sub>",value:"a∨(b∨c)≡a∨b∨c"},
+        // {label:"(Ф<sub>0</sub>∨Ф<sub>1</sub>)∨Ф<sub>2</sub>≡Ф<sub>0</sub>∨Ф<sub>1</sub>∨Ф<sub>2</sub>",value:"(a∨b)∨c≡a∨b∨c"},
         // {label:"(Ф<sub>0</sub>)≡Ф<sub>0</sub>", value:"(a)≡a"},
       ],
     };
     return (
       <div>
-          <ExcerciseForm
-            operators={operators}
-            transformations={transformations}
-            />
-        </div>
+        {
 
-      // <Editor
-      //   excercise={Excercise}/>
+          // <ExcerciseForm
+          //   operators={operators}
+          //   transformations={transformations}
+          //   />
+        }
 
+      <Editor
+        excercise={Excercise}/>
+
+    </div>
     );
   }
 }
