@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FormulaEditor from './FormulaEditor';
 import DualListBox from 'react-dual-listbox';
-import {Button, Form, FormGroup, Label, Input} from 'reactstrap';
+import {Button, Form, FormGroup, Label, Input,Container} from 'reactstrap';
 import peg from "pegjs";
 
 import 'react-duallist/lib/react_duallist.css'
@@ -14,11 +14,12 @@ class ExcerciseForm extends Component {
   constructor(props){
     super(props);
     this.state = {
+      hints:"",
       problemStatement:"",
       startingFormula:"",
       targetFormula:"",
       showToUser:true,
-      selectedTransformations:[]
+      transformationRules:[],
     };
     this.parser = null;
     this.handleChange = this.handleChange.bind(this);
@@ -51,7 +52,17 @@ class ExcerciseForm extends Component {
 
   onSubmit(e){
     e.preventDefault();
-    console.log(this.state.selectedTransformations);
+    var excercise = {};
+    Object.assign(excercise,this.state);
+    excercise.hints = excercise.hints.split(/\r?\n/);
+    for(var i = 0; i < excercise.transformationRules.length; i++)
+    {
+      var rule = {};
+      Object.assign(rule,this.props.transformations[i]);
+      excercise.transformationRules[i] = rule;
+      excercise.transformationRules[i].value = excercise.transformationRules[i].label;
+    }
+
     if(this.parser)
     {
       try{
@@ -69,7 +80,8 @@ class ExcerciseForm extends Component {
         console.log(err.message);
         return;
       }
-      console.log("Successfull login");
+      console.log("All formulas have been successfully parsed");
+      console.log(excercise);
       return;
     }
     console.log("Parser not ready");
@@ -79,6 +91,7 @@ class ExcerciseForm extends Component {
     const operators = this.props.operators;
     const availableTransformations = this.props.transformations.slice();
     return (
+      <Container>
       <Form onSubmit={this.onSubmit}>
       <h1>Create New Excercise</h1>
 
@@ -139,21 +152,35 @@ class ExcerciseForm extends Component {
           </FormGroup>
 
 
+          <FormGroup>
+            <Label for="hints">Hints</Label>
+            <Input
+              type="textarea"
+              name="hints"
+              id="hints"
+              value={this.state.hints}
+              onChange={this.handleChange}
+              rows='4'
+            />
+          </FormGroup>
+
+
         <h4>
         Select Transformations
         </h4>
 
         <DualListBox
           options={availableTransformations}
-          selected={this.state.selectedTransformations}
+          selected={this.state.transformationRules}
           onChange={(selected) => {
-                    this.setState({selectedTransformations:selected});
+                    this.setState({transformationRules:selected});
                 }}
         />
 
       <Button type="submit" color="primary" id="submit" size="lg" block>Submit</Button>
 
       </Form>
+      </Container>
     );
   }
 }
