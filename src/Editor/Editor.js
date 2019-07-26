@@ -4,7 +4,8 @@ import { Container, Row, Col, } from 'reactstrap';
 import './Editor.css';
 import 'font-awesome/css/font-awesome.min.css';
 import Formula from './Formula';
-import ParserUtil from '../Util/ParserUtility'
+import ParserUtil from '../Util/ParserUtility';
+import SweetAlert from 'react-bootstrap-sweetalert';
 
 class Editor extends Component{
 
@@ -51,6 +52,8 @@ class Editor extends Component{
       hintIndex:0,
 
       status:"All good!",
+
+      popup:null,
 
     };
 
@@ -476,12 +479,29 @@ class Editor extends Component{
     var targetFormulaRoot = this.parser.parse(this.props.excercise.targetFormula);
     if(ParserUtil.compareTrees(this.root,targetFormulaRoot))
     {
-      alert("Correct !!")
+      // alert("Correct !!")
+      this.setState({popup:(<SweetAlert
+       success
+       title="Bravo!"
+       onConfirm={() => this.hideAlert()}
+     />)});
     }
     else{
-      alert("Not Correct")
+      // alert("Not Correct")
+      this.setState({popup:(  <SweetAlert
+         danger
+         title="Wrong answer!"
+         onConfirm={() => this.hideAlert()}
+       />)});
+
     }
   }
+
+  hideAlert() {
+  this.setState({
+    popup: null
+  });
+}
 
   render()
   {
@@ -559,6 +579,7 @@ class Editor extends Component{
 
     return (
       <Container fluid={false}>
+        {this.state.popup}
      <Row>
        <Col
          md="12"

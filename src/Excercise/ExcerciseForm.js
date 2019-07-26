@@ -3,6 +3,8 @@ import FormulaEditor from './FormulaEditor';
 import DualListBox from 'react-dual-listbox';
 import {Button, Form, FormGroup, Label, Input,Container} from 'reactstrap';
 import peg from "pegjs";
+import SweetAlert from 'react-bootstrap-sweetalert';
+
 
 import 'react-duallist/lib/react_duallist.css'
 import 'react-dual-listbox/lib/react-dual-listbox.css';
@@ -20,6 +22,7 @@ class ExcerciseForm extends Component {
       targetFormula:"",
       showToUser:true,
       transformationRules:[],
+      popup:null,
     };
     this.parser = null;
     this.handleChange = this.handleChange.bind(this);
@@ -87,11 +90,18 @@ class ExcerciseForm extends Component {
     console.log("Parser not ready");
   }
 
+  hideAlert() {
+  this.setState({
+    popup: null
+  });
+}
+
   render() {
     const operators = this.props.operators;
     const availableTransformations = this.props.transformations.slice();
     return (
       <Container>
+        {this.state.popup}
       <Form onSubmit={this.onSubmit}>
       <h1>Create New Excercise</h1>
 
