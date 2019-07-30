@@ -3,6 +3,23 @@ import ExcerciseForm from './Excercise/ExcerciseForm.js';
 import Editor from './Editor/Editor.js';
 class App extends Component {
 
+  constructor(props)
+  {
+    super(props);
+
+    this.createEditor = this.createEditor.bind(this);
+
+    this.state = {
+      excercise : null,
+    }
+
+  }
+
+  createEditor(excercise){
+    console.log("Created successfully");
+    console.log(excercise);
+    this.setState({excercise:excercise});
+  }
 
   render() {
     const operators = ['∨','∧','→','↔','⊤','⊥','¬'];
@@ -64,19 +81,23 @@ class App extends Component {
         // {label:"(Ф<sub>0</sub>)≡Ф<sub>0</sub>", value:"(a)≡a"},
       ],
     };
+
+    var output = this.state.excercise==null? (
+        <ExcerciseForm
+          operators={operators}
+          transformations={transformations}
+          createEditor={this.createEditor}
+          />
+    ) :
+    (
+        <Editor
+          excercise={this.state.excercise}/>
+    );
+
     return (
-      <div>
-
-          <ExcerciseForm
-            operators={operators}
-            transformations={transformations}
-            />
-        </div>
-
-
-      // <Editor
-      //   excercise={Excercise}/>
-
+      <div className="TEST">
+        {output}
+      </div>
     );
   }
 }

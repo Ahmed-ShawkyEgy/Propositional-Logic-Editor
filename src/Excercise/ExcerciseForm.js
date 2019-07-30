@@ -107,7 +107,7 @@ class ExcerciseForm extends Component {
       this.setState({popup:(<SweetAlert
         success
         title="Excercise created successfully!"
-        onConfirm={() => this.onPopupClose()}
+        onConfirm={() => this.props.createEditor(excercise)}
       />)});
 
       return;
