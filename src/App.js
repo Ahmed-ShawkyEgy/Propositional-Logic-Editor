@@ -25,12 +25,12 @@ class App extends Component {
 
     let Excercise = {
       problemStatement:"Your task in this excercise is to use the transformation rules on the right and apply them on the given formula to reach at the end a formula that is in valid conjiunctive normal form",
-      startingFormula:"a*(b+c)-(b/a)",
-      targetFormula:"a*(c+b)-(b/a)",
+      startingFormula:"a*(b+c)-(b+a)",
+      targetFormula:"a*(c+b)-b-a",
       showToUser:true,
       hints:[
-        "Try to remove all of the implications first",
-        "The answer doesn't have to match exactly the target formula, it should however be in CNF",
+        "Try to distribute all the negative signs first",
+        "The answer must match exactly with the target formula",
         "Extra brackets don't affect the solution",
         "Always distribute the negative sign",
       ],
@@ -39,6 +39,8 @@ class App extends Component {
         {label:"Ф<sub>0</sub>-Ф<sub>1</sub>≡Ф<sub>1</sub>-Ф<sub>0</sub>", value:"a-b≡b-a", comment:"Associativity resolved"},
         {label:"Ф<sub>0</sub>*Ф<sub>1</sub>≡Ф<sub>1</sub>*Ф<sub>0</sub>", value:"a*b≡b*a", comment:"Associativity resolved"},
         {label:"~~Ф<sub>0</sub>≡Ф<sub>0</sub>", value:"~~a≡a", comment:"Double negation resolved"},
+        {label:"Ф<sub>0</sub>-(Ф<sub>1</sub>+Ф<sub>2</sub>)≡Ф<sub>0</sub>-Ф<sub>1</sub>-Ф<sub>2</sub>", value:"a-(b+c)≡a-b-c", comment:"Negation Distributed"},
+        {label:"Ф<sub>0</sub>-(Ф<sub>1</sub>-Ф<sub>2</sub>)≡Ф<sub>0</sub>-Ф<sub>1</sub>+Ф<sub>2</sub>", value:"a-(b-c)≡a-b+c", comment:"Negation Distributed"},
         // {label:"Ф<sub>0</sub>→Ф<sub>1</sub>≡¬Ф<sub>0</sub>∨Ф<sub>1</sub>" , value:"a→b≡¬(a)∨(b)",comment:"Implication Resolved"},
         // {label:"Ф<sub>0</sub>↔Ф<sub>1</sub>≡(¬Ф<sub>0</sub>∨Ф<sub>1</sub>)∧(¬Ф<sub>1</sub>∨Ф<sub>0</sub>)", value:"a↔b≡(¬(a)∨b)∧(¬(b)∨a)", comment:"Equivilance Resolved"},
         // {label:"Ф<sub>0</sub>∨(Ф<sub>1</sub>∧Ф<sub>2</sub>)≡(Ф<sub>0</sub>∨Ф<sub>1</sub>)∧(Ф<sub>0</sub>∨Ф<sub>2</sub>)", value:"a∨(b∧c)≡(a∨b)∧(a∨c)", comment:"Distributivity Applied"},
