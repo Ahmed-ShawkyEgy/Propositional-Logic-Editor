@@ -66,17 +66,9 @@ class App extends Component {
     };
     return (
       <div>
-
-          <ExcerciseForm
-            operators={operators}
-            transformations={transformations}
-            />
+        <Editor
+          excercise={Excercise}/>
         </div>
-
-
-      // <Editor
-      //   excercise={Excercise}/>
-
     );
   }
 }
