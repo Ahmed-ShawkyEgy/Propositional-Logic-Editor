@@ -434,7 +434,8 @@ class Editor extends Component{
         historyIndex:index - 1,
         colors:new Array(history[index-1].currentFormula.length).fill(this.statics.DESELECT_COLOR),
         mapArray: newMapArray,
-        status:"Undo"
+        status:"Undo",
+        subFormulas:[]
       });
     }
   }
@@ -453,7 +454,8 @@ class Editor extends Component{
         historyIndex:index + 1,
         colors:new Array(history[index + 1].currentFormula.length).fill(this.statics.DESELECT_COLOR),
         mapArray: newMapArray,
-        status:"Redo"
+        status:"Redo",
+        subFormulas:[]
       });
     }
   }
